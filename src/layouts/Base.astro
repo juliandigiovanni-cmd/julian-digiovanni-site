@@ -1,0 +1,75 @@
+---
+import { site } from '../data/site';
+import '../styles/theme.css';
+import '../styles/base.css';
+import Link from '../components/Link.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Page-level heading; omit on the homepage which supplies its own hero. */
+  heading?: string;
+}
+
+const { title, description = site.description, heading } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : site.name;
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const year = new Date().getFullYear();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, site.url)} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="masthead">
+      <div class="wrap masthead__inner">
+        <a class="masthead__name" href="/">{site.name}</a>
+        <nav class="nav" aria-label="Main">
+          {site.nav.map((item) => {
+            const href = item.url.replace(/\/+$/, '') || '/';
+            return (
+              <a href={item.url} aria-current={href === path ? 'page' : undefined}>
+                {item.label}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap">
+      {heading && <h1 style="margin-block: var(--space-lg) var(--space-md)">{heading}</h1>}
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div class="prose">
+        <p>{site.disclaimer}</p>
+        <p>
+          © {year} {site.name} ·
+          <a href={`mailto:${site.email}`}>Email</a> ·
+          {site.profiles.map((p, i) => (
+            <>
+              {i > 0 && ' · '}
+              <Link href={p.url}>{p.label}</Link>
+            </>
+          ))}
+        </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

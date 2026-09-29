@@ -1,0 +1,146 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Link from '../components/Link.astro';
+import { topicLabel } from '../data/site';
+
+const posts = (await getCollection('writing')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+// Topics are inherited from the paper each piece explains, so the filter works
+// here with no new data. 24 of 29 entries resolve to a paper.
+const withPaper = await Promise.all(
+  posts.map(async (post) => {
+    const paper = post.data.paper ? await getEntry(post.data.paper) : undefined;
+    const topics = post.data.topics.length ? post.data.topics : (paper?.data.topics ?? []);
+    return { post, paper, topics };
+  }),
+);
+
+const outlets = [
+  { key: 'liberty-street', label: 'Liberty Street Economics', note: 'Federal Reserve Bank of New York' },
+  { key: 'voxeu', label: 'VoxEU', note: 'CEPR' },
+] as const;
+
+const counts = new Map<string, number>();
+for (const w of withPaper) for (const t of w.topics) counts.set(t, (counts.get(t) ?? 0) + 1);
+const topics = Object.keys(topicLabel).filter((t) => counts.has(t));
+
+const fmt = (d: Date) => ({
+  year: d.getUTCFullYear(),
+  month: d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }),
+});
+---
+
+<Base
+  title="Policy Writing"
+  description="Policy columns and blog posts — the non-technical versions of my research."
+>
+  <h1 class="page-title">Policy Writing</h1>
+
+  <p class="prose" style="color: var(--ink-muted); margin-bottom: var(--space-md)">
+    Short, non-technical pieces. Where one explains a specific paper, the paper is linked
+    underneath it.
+  </p>
+
+  <nav class="section-nav" aria-label="Sections">
+    {outlets.map((o) => (
+      <a href={`#${o.key}`}>
+        {o.label} <span class="section-nav__n">{withPaper.filter((w) => w.post.data.outlet === o.key).length}</span>
+      </a>
+    ))}
+  </nav>
+
+  <div class="filter" data-filter-bar>
+    <p class="filter__label" id="filter-label">Filter by topic</p>
+    <div class="filter__chips" role="group" aria-labelledby="filter-label">
+      <button class="filter-chip" type="button" data-topic="" aria-pressed="true">All</button>
+      {topics.map((t) => (
+        <button class="filter-chip" type="button" data-topic={t} aria-pressed="false">
+          {topicLabel[t]} <span class="filter-chip__n">{counts.get(t)}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p class="filter-empty" hidden data-filter-empty>No pieces match that topic.</p>
+
+  {outlets.map((o) => {
+    const items = withPaper.filter(({ post }) => post.data.outlet === o.key);
+    return (
+      <section class="section" id={o.key} data-group>
+        <header class="section-head">
+          <h2>{o.label}</h2>
+          <span class="section-count" data-count-for={o.key}>{items.length}</span>
+        </header>
+        <ul class="pub-list">
+          {items.map(({ post, paper, topics: ts }) => {
+            const d = fmt(post.data.date);
+            return (
+              <li class="pub" data-topics={ts.join(' ')}>
+                <div class="pub__rail">
+                  <div class="pub__year">{d.year}</div>
+                  <div class="pub__month">{d.month}</div>
+                  {ts.length > 0 && (
+                    <p class="pub__topics">
+                      {ts.map((t) => <span class="topic-tag">{topicLabel[t] ?? t}</span>)}
+                    </p>
+                  )}
+                </div>
+                <div class="pub__body">
+                  <h3 class="pub__title"><Link href={post.data.url}>{post.data.title}</Link></h3>
+                  <p class="pub__meta">{o.note}</p>
+                  {paper && (
+                    <p class="pub__actions">
+                      <a href={`/research/#${paper.id}`}>Paper: {paper.data.title} →</a>
+                    </p>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    );
+  })}
+</Base>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-filter-bar]');
+  const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+  if (bar) {
+    const chips = [...bar.querySelectorAll<HTMLButtonElement>('.filter-chip')];
+    const entries = [...document.querySelectorAll<HTMLElement>('.pub[data-topics]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+    const apply = (wanted: string[]) => {
+      const want = new Set(wanted.filter(Boolean));
+      for (const el of entries) {
+        const has = (el.dataset.topics ?? '').split(' ').filter(Boolean);
+        el.hidden = want.size > 0 && !has.some((t) => want.has(t));
+      }
+      for (const g of groups) {
+        const shown = g.querySelectorAll('.pub:not([hidden])').length;
+        g.hidden = shown === 0;
+        const n = g.querySelector('[data-count-for]');
+        if (n) n.textContent = String(shown);
+      }
+      if (empty) empty.hidden = entries.some((e) => !e.hidden);
+      for (const c of chips) {
+        const t = c.dataset.topic ?? '';
+        c.setAttribute('aria-pressed', String(t === '' ? want.size === 0 : want.has(t)));
+      }
+      const url = new URL(location.href);
+      if (want.size) url.searchParams.set('topic', [...want].join(','));
+      else url.searchParams.delete('topic');
+      history.replaceState(null, '', url);
+    };
+    bar.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-chip');
+      if (chip) apply([chip.dataset.topic ?? '']);
+    });
+    const initial = (new URL(location.href).searchParams.get('topic') ?? '')
+      .split(',').map((s) => s.trim()).filter(Boolean);
+    if (initial.length) apply(initial);
+  }
+</script>

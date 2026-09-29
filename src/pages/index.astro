@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+import headshot from '../assets/headshot.jpg';
+import Link from '../components/Link.astro';
+
+// The homepage is the hero and nothing else. An earlier draft carried a
+// "Selected work" list; Julian asked for it out. Keep this page short and
+// well-proportioned rather than padding it.
+const links = [
+  { label: 'Research', url: '/research/', primary: true },
+  { label: 'CV (PDF)', url: '/cv_diGiovanni.pdf' },
+  ...site.profiles,
+];
+---
+
+<Base>
+  <section class="home">
+    <Image
+      class="home__portrait"
+      src={headshot}
+      alt="Julian di Giovanni"
+      widths={[176, 352]}
+      sizes="176px"
+      loading="eager"
+    />
+
+    <div class="home__body">
+      <h1>Julian di Giovanni</h1>
+
+      <p class="home__lede">
+        Welcome to my home page! I am an international macroeconomist. My research
+        focuses on international spillovers and macroeconomic fluctuations. My work
+        exploits big data, econometrics, and structural models to study the response of
+        firms, banks, and consumers to economic and financial shocks.
+      </p>
+
+      <ul class="home__roles">
+        {site.roles.map((r) => (
+          <li><span>{r.label},</span> <Link href={r.url}>{r.org}</Link></li>
+        ))}
+      </ul>
+
+      <p class="home__links">
+        {links.map((l) => (
+          <Link href={l.url} class:list={['home__link', (l as any).primary && 'home__link--primary']}>
+            {l.label}
+          </Link>
+        ))}
+      </p>
+    </div>
+  </section>
+
+</Base>

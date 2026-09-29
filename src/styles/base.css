@@ -1,0 +1,567 @@
+/* -----------------------------------------------------------------------------
+   base.css -- layout grammar, grid, type rhythm. Structure only.
+   This file consumes custom properties and defines none. All colour and
+   typeface choices live in theme.css.
+----------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--size-body);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  color: var(--ink-strong);
+  line-height: 1.2;
+  margin: 0 0 var(--space-sm);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+h1 { font-size: var(--size-h1); letter-spacing: -0.014em; }
+h2 { font-size: var(--size-h2); }
+h3 { font-size: var(--size-h3); font-weight: 600; }
+
+p { margin: 0 0 var(--space-md); }
+p:last-child { margin-bottom: 0; }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--accent-hover); }
+
+img { max-width: 100%; height: auto; display: block; }
+
+ul, ol { margin: 0 0 var(--space-md); padding-left: 1.2em; }
+
+hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute; left: -9999px;
+  background: var(--bg-raised); color: var(--ink-strong);
+  padding: var(--space-sm) var(--space-md); z-index: 100;
+}
+.skip-link:focus { left: var(--space-md); top: var(--space-md); }
+
+/* --- shell ------------------------------------------------------------- */
+
+/* Side padding is set once, here. Vertical padding uses padding-block so it
+   can never zero out the side gutter. */
+.wrap {
+  width: 100%;
+  max-width: var(--measure-wide);
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+}
+.prose { max-width: var(--measure); }
+
+.section { padding-block: var(--space-lg); }
+.section + .section { border-top: 1px solid var(--rule); }
+
+.section-title {
+  font-size: var(--size-tiny);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+/* --- masthead ---------------------------------------------------------- */
+
+.masthead {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 20;
+}
+.masthead__inner {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-sm) var(--space-md);
+  padding-block: var(--space-sm);
+}
+.masthead__name {
+  font-weight: 650; color: var(--ink-strong);
+  text-decoration: none; font-size: 1.02rem;
+  letter-spacing: -0.01em; margin-right: auto;
+}
+.nav { display: flex; flex-wrap: wrap; gap: var(--space-md); }
+.nav a {
+  color: var(--ink-muted); text-decoration: none;
+  font-size: var(--size-small);
+  /* 44px tap target without visually enlarging the link */
+  padding-block: 0.6rem;
+}
+.nav a:hover, .nav a[aria-current="page"] { color: var(--ink-strong); }
+.nav a[aria-current="page"] { font-weight: 600; }
+
+/* --- sections ---------------------------------------------------------- */
+
+/* A section announces itself: a serif heading with its count, over a rule.
+   The old 12.8px grey caption was the only signal a section existed, which is
+   why the page read as one undifferentiated list. */
+.section-head {
+  display: flex; align-items: baseline; gap: var(--space-sm);
+  border-bottom: 2px solid var(--ink-strong);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+.section-head h2 {
+  font-size: var(--size-h2);
+  margin: 0; margin-right: auto;
+}
+.section-count {
+  font-family: var(--font-sans);
+  font-size: var(--size-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+/* --- publication list --------------------------------------------------- */
+
+/* Entries sit on a white panel over the off-white ground, so a section reads as
+   one object and the rows inside it as its parts. */
+.pub-list {
+  list-style: none; padding: 0; margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+/* The rail carries the year and the topics; the main column carries the words.
+   Before this, entry text stopped at 62ch inside a 1024px shell and half the
+   page was empty. */
+.pub {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xs) var(--space-lg);
+  padding: var(--space-md);
+  border-top: 1px solid var(--rule-soft);
+  scroll-margin-top: 5rem;
+}
+.pub:first-child { border-top: 0; }
+.pub:hover { background: var(--bg-raised); }
+
+@media (min-width: 46rem) {
+  .pub { grid-template-columns: 7rem 1fr; padding: var(--space-md) var(--space-lg); }
+}
+
+.pub__rail { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs); }
+@media (min-width: 46rem) {
+  .pub__rail { display: block; }
+}
+.pub__year {
+  font-family: var(--font-sans);
+  font-size: 1.15rem; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-strong);
+  line-height: 1.2;
+}
+.pub__month {
+  font-size: var(--size-tiny); color: var(--ink-faint);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+/* In the rail the topics are a keyword list, not chips: "International finance"
+   is wider than the rail, so a pill would wrap mid-phrase. Below the breakpoint
+   the rail is a single row again, where chips do fit and read better. */
+.pub__rail .pub__topics { margin: 0; }
+@media (min-width: 46rem) {
+  .pub__rail .pub__topics {
+    display: block; margin-top: var(--space-sm);
+  }
+  .pub__rail .topic-tag {
+    display: block; border: 0; padding: 0;
+    color: var(--ink-faint); line-height: 1.5;
+  }
+}
+
+.pub__body { min-width: 0; }
+
+.pub__title {
+  font-family: var(--font-serif);
+  font-size: var(--size-h3); font-weight: 600;
+  color: var(--ink-strong); margin-bottom: var(--space-xs);
+  line-height: 1.25;
+}
+.pub__title a { color: inherit; text-decoration: none; }
+.pub__title a:hover { color: var(--accent); text-decoration: underline; }
+
+/* Everything in the body wraps at one width, so an entry reads as a column. */
+.pub__meta,
+.pub__actions,
+.pub__press,
+.pub__abstract p { max-width: var(--measure-entry); }
+
+.pub__meta {
+  font-family: var(--font-sans);
+  font-size: var(--size-meta); color: var(--ink-muted);
+  line-height: 1.5;
+  margin-bottom: var(--space-sm);
+}
+
+/* Justified, as in a published paper. Hyphenation is not optional here: without
+   it, justifying a measure this wide opens rivers of white space between words.
+   One definition, so every justified block on the site behaves the same. */
+.pub__abstract p,
+.coffee__body,
+.home__lede {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.pub__actions {
+  display: flex; flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-md);
+  font-size: var(--size-meta);
+  margin-bottom: 0;
+}
+
+/* --- cards ------------------------------------------------------------- */
+
+.card-grid {
+  display: grid; gap: var(--space-md);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.card {
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  padding: var(--space-md);
+}
+
+/* --- footer ------------------------------------------------------------ */
+
+.footer {
+  border-top: 1px solid var(--rule);
+  margin-top: var(--space-xl);
+  padding-block: var(--space-lg);
+  font-size: var(--size-small);
+  color: var(--ink-muted);
+}
+.footer a { color: var(--ink-muted); }
+
+/* Tables, figures and code may scroll sideways. The page body may not. */
+.scroll-x { overflow-x: auto; }
+
+/* --- paper entry extras ------------------------------------------------- */
+
+
+.pub__abstract { margin-bottom: var(--space-sm); }
+.pub__abstract summary {
+  cursor: pointer; font-size: var(--size-meta);
+  color: var(--accent); width: fit-content; padding-block: 0.35rem;
+}
+.pub__abstract p {
+  margin-top: var(--space-xs); font-size: var(--size-small);
+  color: var(--ink-muted);
+}
+
+/* --- topic tags and filter --------------------------------------------- */
+
+.pub__topics { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-bottom: var(--space-sm); }
+.topic-tag {
+  font-size: var(--size-tiny); color: var(--ink-muted);
+  border: 1px solid var(--rule-strong); border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+}
+
+/* The section nav is the direct answer to "hard to know there is peer reviewed
+   and WP sections". Plain anchors, so it works without JavaScript. */
+.section-nav {
+  display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md);
+  margin-bottom: var(--space-md);
+  font-size: var(--size-meta);
+}
+/* These take the site's ordinary link colour and underline from the `a` rule
+   above. They used to opt out of both, which made them the only links on the
+   site that looked like plain text -- and nobody could tell they were links.
+   The transparent border reserves the 2px so marking the current section does
+   not shift the row sideways. */
+.section-nav a {
+  padding-block: 0.45rem;
+  border-bottom: 2px solid transparent;
+}
+/* The current section is where the reader already is, so it drops the underline
+   and is marked by the accent rule beneath it instead. Deliberately NOT bold:
+   the scroll spy retags this as the reader moves down the page, and bolding
+   widens the text enough to shove every link after it ~6px sideways. */
+.section-nav a.is-current {
+  color: var(--ink-strong);
+  border-bottom-color: var(--accent);
+  text-decoration: none;
+}
+.section-nav__n {
+  font-variant-numeric: tabular-nums; color: var(--ink-faint);
+  font-size: var(--size-tiny);
+}
+
+/* The chips read as decoration until they sit on a surface with a label. */
+.filter {
+  background: var(--bg-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.filter__label {
+  font-size: var(--size-tiny); text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--ink-muted); font-weight: 700;
+  margin: 0 0 var(--space-sm);
+}
+.filter__chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.filter-chip {
+  font: inherit; font-size: var(--size-small);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--rule-strong); border-radius: 999px;
+  padding: 0.3rem 0.8rem; cursor: pointer;
+  min-height: 34px;
+}
+.filter-chip:hover { border-color: var(--ink-faint); color: var(--ink-strong); }
+.filter-chip[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 550;
+}
+.filter-chip__n { opacity: 0.6; font-variant-numeric: tabular-nums; font-size: var(--size-tiny); }
+.pub[hidden] { display: none !important; }
+.section[hidden] { display: none !important; }
+.filter-empty { color: var(--ink-muted); padding-block: var(--space-lg); }
+
+/* --- homepage ----------------------------------------------------------- */
+
+/* Portrait first in source order so it leads on a phone; on wider screens it
+   moves to the right of the text. */
+.home {
+  display: grid;
+  gap: var(--space-lg);
+  padding-block: var(--space-xl) var(--space-lg);
+  justify-items: start;
+}
+@media (min-width: 46rem) {
+  .home {
+    grid-template-columns: 1fr auto;
+    gap: var(--space-xl);
+    align-items: start;
+    padding-block: calc(var(--space-xl) * 1.3) var(--space-xl);
+  }
+  .home__body { grid-column: 1; grid-row: 1; }
+  .home__portrait { grid-column: 2; grid-row: 1; }
+}
+
+.home__portrait {
+  width: 176px; height: 176px; border-radius: 50%;
+  object-fit: cover; border: 1px solid var(--rule);
+}
+
+.home h1 { margin-bottom: var(--space-md); }
+
+.home__lede {
+  font-size: 1.14em;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 54ch;
+  margin-bottom: var(--space-lg);
+}
+
+/* At --size-small these read as a caption. At body size the four lines behind
+   the rule read as a block, which is most of the page's weight now that the
+   themes block is gone. */
+.home__roles {
+  list-style: none; padding: 0;
+  margin: 0 0 var(--space-lg);
+  font-size: var(--size-body);
+  line-height: 1.5;
+  color: var(--ink-muted);
+  border-left: 2px solid var(--rule-strong);
+  padding-left: var(--space-md);
+}
+.home__roles li { margin-bottom: 0.45rem; }
+.home__roles li:last-child { margin-bottom: 0; }
+.home__roles li:last-child { margin-bottom: 0; }
+
+.home__links {
+  display: flex; flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: 0;
+}
+.home__link {
+  display: inline-block;
+  font-size: var(--size-small);
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--bg-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.9rem;
+  min-height: 40px;
+}
+.home__link:hover { border-color: var(--rule-strong); color: var(--ink-strong); }
+.home__link--primary {
+  background: var(--accent); border-color: var(--accent);
+  color: #fff; font-weight: 550;
+}
+.home__link--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+
+/* --- press coverage ----------------------------------------------------- */
+
+.pub__press {
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: var(--space-xs) var(--space-md);
+  font-size: var(--size-meta);
+  margin: var(--space-xs) 0 0;
+}
+.pub__press-label {
+  font-size: var(--size-tiny); text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-faint); font-weight: 600;
+}
+.pub__version { white-space: nowrap; }
+/* Keep a person's name on one line. The longest here is ~22 characters, which
+   still fits a 390px screen inside the page gutters. */
+.pub__authors a { color: inherit; text-decoration-color: var(--rule-strong); white-space: nowrap; }
+.pub__authors a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+/* The masthead is sticky, so anything jumped to by its anchor -- a section from
+   the section nav, or an entry cross-linked from the Policy Writing page --
+   would otherwise land underneath it. Measured: the masthead is 65px wide-screen
+   and 102px at 375px, where the nav wraps onto a second line, so the narrow case
+   needs the larger offset. */
+.pub, .section { scroll-margin-top: 5rem; }
+@media (max-width: 46rem) {
+  .pub, .section { scroll-margin-top: 7rem; }
+}
+
+/* --- coffee ------------------------------------------------------------- */
+
+/* The one coloured thing on the site that is not a link, a chip or a focus ring.
+   Julian asked for the project name to carry some weight, and the accent already
+   in the palette does it without introducing a second colour. */
+.coffee__name { color: var(--accent); margin-bottom: var(--space-xs); }
+
+/* The line under the name. Serif so it sits with the title it belongs to, muted
+   and a step down in size so it reads as a subtitle. */
+.coffee__deck {
+  font-family: var(--font-serif);
+  font-size: var(--size-body);
+  color: var(--ink-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* --- figures ------------------------------------------------------------ */
+
+/* Charts are rendered to SVG at build time, so there is nothing to lay out
+   except the frame. The caption follows the pattern the research-page figure
+   used before it was removed: small, muted, with the source a step fainter. */
+.figure { margin: 0 0 var(--space-md); max-width: var(--measure); }
+/* Below about 600px the chart would scale down far enough that its 12px labels
+   become illegible, so it stops shrinking and the figure scrolls sideways
+   instead -- the same trade the site makes for wide tables via .scroll-x. */
+.figure__plot { overflow-x: auto; }
+.figure__plot svg { min-width: 600px; height: auto; }
+.figure figcaption {
+  font-size: var(--size-tiny);
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-top: var(--space-sm);
+}
+.figure__src { display: block; color: var(--ink-faint); }
+
+/* The stage list under the chain figure. Each stage is a native <details>, the
+   same disclosure the Research page uses for abstracts, so the default view is
+   the five stage names and their shares and nothing more. No script involved. */
+.chain { max-width: var(--measure); margin: 0 0 var(--space-md); }
+.chain__stage { border-top: 1px solid var(--rule-soft); }
+.chain__stage:last-child { border-bottom: 1px solid var(--rule-soft); }
+.chain__stage summary {
+  cursor: pointer;
+  color: var(--accent);
+  padding-block: 0.62rem;   /* keeps the row a 44px+ touch target on a phone */
+  font-size: var(--size-body);
+}
+.chain__stage summary:hover { color: var(--accent-hover); }
+.chain__stage p {
+  margin: 0 0 var(--space-md);
+  font-size: var(--size-small);
+  color: var(--ink-muted);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* --- CV page ------------------------------------------------------------ */
+
+.cv-head {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: var(--space-md);
+  margin-block: var(--space-lg) var(--space-md);
+}
+.cv-head h1 { margin: 0; margin-right: auto; }
+.cv-head .page-title { margin-block: 0; }
+
+/* Year in one column, the entry in the other. Stacks on a phone, where a
+   fixed year column would squeeze the text to nothing. */
+.cv-list { margin: 0; display: grid; grid-template-columns: 1fr; gap: 0; }
+.cv-list dt {
+  font-size: var(--size-small); color: var(--ink-muted);
+  font-variant-numeric: tabular-nums; padding-top: var(--space-sm);
+}
+.cv-list dd { margin: 0 0 var(--space-sm); }
+@media (min-width: 34rem) {
+  .cv-list { grid-template-columns: 7.5rem 1fr; column-gap: var(--space-md); }
+  .cv-list dt { padding-top: var(--space-xs); }
+  .cv-list dd { padding-top: var(--space-xs); }
+}
+.cv-detail { color: var(--ink-muted); }
+
+.cv-group { margin-bottom: var(--space-md); }
+.cv-group__name {
+  font-size: var(--size-body); font-weight: 600;
+  color: var(--ink-strong); margin-bottom: var(--space-xs);
+}
+
+.cv-sub {
+  font-size: var(--size-small); font-weight: 600; color: var(--ink-strong);
+  margin: var(--space-md) 0 var(--space-xs);
+}
+
+.cv-plain { list-style: none; padding: 0; margin: 0; max-width: var(--measure); }
+.cv-plain li {
+  padding-block: var(--space-xs);
+  border-top: 1px solid var(--rule);
+  font-size: var(--size-small);
+}
+.cv-plain li:first-child { border-top: 0; }
+
+/* The venue is the thing an academic reader scans for. */
+.pub__venue { color: var(--ink-strong); font-weight: 650; }
+
+/* --- page title --------------------------------------------------------- */
+
+.page-title { margin-block: var(--space-lg) var(--space-md); }
+
+/* Sections no longer need a top rule -- the section head carries one. */
+.section + .section { border-top: 0; }
+.section { padding-block: var(--space-md) var(--space-lg); }
+
+
+/* CV blocks get the same surface as a publication list, so the two pages read
+   as one site. */
+.cv-list, .cv-plain {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--space-sm) var(--space-md);
+}
+.cv-plain li { border-top-color: var(--rule-soft); }
+.cv-group .cv-list { margin-bottom: var(--space-sm); }

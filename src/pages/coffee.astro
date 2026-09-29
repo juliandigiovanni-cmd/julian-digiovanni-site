@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+import Link from '../components/Link.astro';
+import Figure from '../components/Figure.astro';
+import { chainChart, cappuccinoChart } from '../lib/coffee-charts';
+
+// A pointer page, deliberately short. The map itself lives at knowyourgrounds.com
+// and is where the work is; this page exists because the nav promises it, and a
+// reader who lands here should know what the link is before following it.
+//
+// Two things to leave alone. No café or city counts: the live site carries them
+// and they move, so a hand-maintained second copy goes stale without anyone
+// noticing. And nothing here should imply the map follows Julian's travels --
+// most of the cities on it are places he has never been.
+const url = 'https://www.knowyourgrounds.com';
+const video = 'https://www.youtube.com/watch?v=WtlE3BW9Nqs';
+const dashboard =
+  'https://datastudio.google.com/u/0/reporting/b3354e23-eaff-4bd6-a776-24736dddf4c3/page/DqZ5F';
+---
+
+<Base
+  title="Coffee"
+  description="Know your Grounds, a world coffee map for travellers — independent specialty cafés, scored on a published method."
+>
+  <h1 class="page-title">Coffee</h1>
+
+  <p class="prose coffee__body" style="color: var(--ink-muted); margin-bottom: var(--space-md)">
+    I enjoy trying new coffee and cafés. Exploring coffee also maps into my love of
+    travel and my research on globalization and international supply chains. This page
+    highlights some of this with a specialty coffee map I built, a short account of the
+    supply chain behind a cup, how climate change will impact the cost of this cup, and a
+    small index, for fun, of how many minutes of work it takes to buy the cappuccino you
+    just ordered &mdash; remember this number the next time you tip your local barista.
+  </p>
+
+  <nav class="section-nav" aria-label="Sections">
+    <a href="#grounds">Know your Grounds</a>
+    <a href="#supply-chain">The coffee supply chain</a>
+    <a href="#cappuccino">The cappuccino index</a>
+  </nav>
+
+  <section class="section" id="grounds">
+    <h2 class="coffee__name">Know your Grounds</h2>
+    <p class="coffee__deck">A global map of specialty cafés you can trust</p>
+
+    <p class="prose coffee__body">
+      A café earns its place by naming the roaster it buys from, by brewing pour-over
+      and syphon by hand alongside espresso, and by being independent, since chains are
+      excluded outright. Cafés the coffee press has written up score higher, while
+      crowd star-ratings count for nothing, and the method behind the score is published
+      in full so anyone can see why a café sits where it does. I also add the ones I
+      have particularly enjoyed on my own travels.
+    </p>
+
+    <p class="home__links">
+      <Link href={url} class="home__link home__link--primary">knowyourgrounds.com →</Link>
+    </p>
+  </section>
+
+  <section class="section" id="supply-chain">
+    <header class="section-head">
+      <h2>Why climate matters for the coffee supply chain</h2>
+    </header>
+
+    <p class="prose coffee__body">
+      Coffee reaches the consumer through a long supply chain, and most of what a cup
+      costs is added a long way from the farm. Taxes on coffee differ so much between countries that
+      they swamp everything else, so the figure below strips them out. What is left
+      divides roughly into thirds: a third to the farmer, half to roasting and retail
+      together, and an eighth to moving the coffee. Four-fifths of the farmer&rsquo;s
+      third goes on growing the crop, which leaves an income of about a twelfth of the
+      price.
+    </p>
+
+    <Figure
+      svg={chainChart()}
+      caption="Euros per kilogram of German national-brand ground coffee, 2021, shown as shares of the price before tax. Taxes are taken out because a flat German excise of €2.19 a kilogram is a fact about Germany rather than about coffee: the same levy is 31% of a private-label ground pack and 6% of a capsule. One origin-to-Germany chain for one product, not a world average."
+      source="Source: BASIC et al. (2024), The Grounds for Sharing, commissioned by the Global Coffee Platform, IDH and Solidaridad, as reproduced in Coffee Barometer 2026, Figure 7, p.59. Division of the pre-tax price is the author’s calculation from their published euro figures."
+    />
+
+    <p class="prose coffee__body">
+      Climate presses on the early stages hardest, and its effect thins as it travels.
+      A world price that roughly doubled between early 2024 and February 2025 left the
+      price of a cup of coffee in a café close to where it started. The green coffee in
+      a $5 drink was worth about 17 cents at the top of that run, against nearer 7 cents
+      at more ordinary prices.
+    </p>
+
+    <h3>Where climate and disruption hit the chain</h3>
+
+    <div class="chain">
+      <details class="chain__stage">
+        <summary>The farmer</summary>
+        <p>
+          Frost and drought in Brazil have preceded every large spike in the world price
+          since the 1970s. Robusta, the hardier half of the crop, loses about 14% of its
+          yield for every degree above a mean of 20.5&deg;C, an optimum several degrees
+          below the range the industry had assumed (Kath and others,
+          <em>Global Change Biology</em>, 2020). Coffee leaf rust compounds this, since
+          its worst epidemics have come in low-price years when growers cut back on
+          management (Avelino and others, <em>Food Security</em>, 2015). Rain then
+          damages coffee that has already been grown and picked, at the point where it
+          is drying. Above 750mm in the harvest window, with mean minimum temperatures
+          over 22&deg;C, the chance of above-average defects passes three in four (Kath
+          and others, <em>Climate Risk Management</em>, 2021). In November 2025 more
+          than 1,100mm fell on Vietnam&rsquo;s Central Highlands in five days, against a
+          November norm of 104mm, while part of the harvest lay on the drying patios
+          (International Coffee Organization, <em>Coffee Market Report</em>,
+          November 2025).
+        </p>
+      </details>
+
+      <details class="chain__stage">
+        <summary>Export</summary>
+        <p>
+          In September 2024, 84% of container ships at Santos were delayed and
+          2.2 million bags of coffee sat backlogged. Cecaf&eacute; attributes the
+          congestion to container infrastructure that has not kept pace with the volumes
+          moving through it (Cecaf&eacute;, October 2024).
+        </p>
+      </details>
+
+      <details class="chain__stage">
+        <summary>Trade and shipping</summary>
+        <p>
+          After the driest October since 1950, 41% below normal, the Panama Canal cut
+          daily booking slots from about 36 into the low twenties through 2023 and 2024,
+          and one transit slot went at auction for $4 million (Panama Canal Authority,
+          Advisory A-48-2023). Red Sea diversions then pushed four to five million bags
+          into coffee not yet imported at destination, tightening European supply while
+          every harvest stayed where it was (International Coffee Organization,
+          <em>Coffee Market Report</em>, December 2024).
+        </p>
+      </details>
+
+      <details class="chain__stage">
+        <summary>Roasting</summary>
+        <p>
+          Green coffee is about 68% of what one of the world&rsquo;s largest roasters
+          spends on product, and energy is too small a line to report separately (JDE
+          Peet&rsquo;s, full-year results 2024). The exposure that matters at this stage
+          is carbon pricing, with the European Union&rsquo;s second emissions trading
+          system now due in 2028.
+        </p>
+      </details>
+
+      <details class="chain__stage">
+        <summary>Retail and caf&eacute;s</summary>
+        <p>
+          At Starbucks, running the stores costs about half of revenue while every
+          product sold costs under a third (Form 10-K, financial year 2025). Wages, rent
+          and milk carry that half, and a frost in Minas Gerais leaves them where they
+          were.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <section class="section" id="cappuccino">
+    <header class="section-head">
+      <h2>The cappuccino index</h2>
+    </header>
+
+    <p class="prose coffee__body">
+      A cappuccino costs a barista in Australia about ten minutes of their own working time,
+      and a barista in India a little under three hours. That ratio is the cappuccino index: a
+      local price divided by the local wage of the person who made it. Since both sides are in the same currency, the exchange rate cancels and none of the
+      comparison depends on how a currency is valued. What is left is a price measured in working time, which is a real
+      wage upside down &mdash; the lower the number, the more coffee an hour behind the machine
+      buys.
+    </p>
+
+    <Figure
+      svg={cappuccinoChart()}
+      caption="Minutes of barista work needed to buy one small cappuccino, against real GDP per capita, 2024. Each point is a country. The dashed line is an ordinary least squares fit through all 36 points in logs, with a slope of −1.02 and an R² of 0.69."
+      source="Sources: index from James Hoffmann’s Cappuccino Index 2026, a crowdsourced survey of 2,594 reported pairs of barista hourly wage and cappuccino price, restricted here to the 36 countries answered at least ten times. GDP per capita from World Bank World Development Indicators, series NY.GDP.PCAP.PP.KD, PPP in constant 2021 international dollars (CC BY 4.0). The fitted line is the author’s calculation."
+    />
+
+    <p class="prose coffee__body">
+      The fit is surprisingly strong, especially for an index built on cappuccinos! The slope
+      in logs is about minus one. That is, doubling income per head roughly halves the barista
+      time a cappuccino costs. Countries below the line get their coffee cheaply for
+      the income they have, and the three furthest below are Australia, Italy and New Zealand,
+      which will surprise nobody who has ordered a coffee in any of them. Singapore, Turkey
+      and Malaysia sit furthest above.
+    </p>
+
+    <p class="prose coffee__body">
+      The index is James Hoffmann&rsquo;s and all I have added is the second axis. He explains
+      how he built it, and what went wrong while he was building it, at rather more length
+      than this page does.
+    </p>
+
+    <p class="home__links">
+      <Link href={video} class="home__link home__link--primary">Hoffmann on the index &rarr;</Link>
+      <Link href={dashboard} class="home__link">The full data &rarr;</Link>
+    </p>
+  </section>
+</Base>

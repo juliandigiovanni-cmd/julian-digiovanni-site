@@ -1,0 +1,35 @@
+# BLUEHOST ONLY. The site now deploys to GitHub Pages through
+# .github/workflows/deploy.yml, and Pages ignores .htaccess entirely: the two
+# redirects below are repeated in src/pages/404.astro, and HTTPS is the repo's
+# "Enforce HTTPS" setting. Kept for as long as Bluehost still serves the site,
+# and as the record of the rules. Change a redirect in both places until then.
+#
+# Uploaded to the docroot and renamed to .htaccess. It is NOT produced by the
+# build, so an extract that overwrites it silently undoes everything below and
+# nothing looks broken until someone follows an old link. Leave it alone on
+# redeploys.
+
+Options -Indexes
+DirectoryIndex index.html
+
+# The WordPress site had a 404 page; this replaces it. Astro emits 404.html at
+# the root even under build.format 'directory', so this path is literal.
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+
+# The published CV and the RePEc listings carry http:// links into /Papers/, so
+# HTTPS is forced here rather than left to the host.
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# /policy-blogs is the one live WordPress path the new site does not reproduce.
+# Everything else either matches (/, /research) or is WordPress cruft that is
+# meant to 404. RedirectMatch rather than Redirect: a prefix Redirect keeps the
+# trailing slash and would send /policy-blogs/ to /policy-writing//.
+RedirectMatch 301 ^/policy-blogs/?$ /policy-writing/
+
+# The working-paper version of the ECB Sintra piece was deleted from the server
+# in favour of the published proceedings version. The old site linked the
+# working paper, so send that URL to the one that survives rather than 404.
+Redirect 301 /Papers/DGKOS_InflationSupplyChainTrade.pdf /Papers/DGKOS_InflationSupplyChainTrade_SintraFinal.pdf

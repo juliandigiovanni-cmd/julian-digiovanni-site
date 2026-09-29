@@ -1,0 +1,126 @@
+---
+import { topicLabel } from '../data/site';
+import type { CollectionEntry } from 'astro:content';
+import Link from './Link.astro';
+
+interface Props {
+  paper: CollectionEntry<'papers'>;
+  headingLevel?: 'h2' | 'h3';
+}
+const { paper, headingLevel = 'h3' } = Astro.props;
+const d = paper.data;
+const Heading = headingLevel;
+
+const href = d.pdf ?? d.url;
+
+const esc = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// Coauthor names come from the CV, homepage URLs from the live site, and the two
+// disagree in small ways: a middle initial ("Linda Goldberg" / "Linda S.
+// Goldberg"), or a hyphen in the wrong place ("Manuel García-Santana" /
+// "Manuel-García Santana"). So compare the set of name parts, ignoring order,
+// punctuation, accents and single-letter initials, and treat one name as the
+// other when either set contains the other.
+const parts = (n: string) =>
+  new Set(
+    n.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().split(/[^a-z]+/).filter((w) => w.length > 1),
+  );
+const covers = (a: Set<string>, b: Set<string>) => [...b].every((w) => a.has(w));
+const known = Object.entries(d.coauthorUrls).map(([name, url]) => ({ set: parts(name), url }));
+const authors = d.coauthors.map((name) => {
+  const p = parts(name);
+  const hit = known.find((k) => covers(k.set, p) || covers(p, k.set));
+  return { name, url: hit?.url };
+});
+
+// The citation already names each working-paper series. Rather than repeat them
+// as a separate row, turn the labels inside the citation into links.
+let citationHtml = d.citation ? esc(d.citation) : '';
+for (const s of d.series) {
+  if (!s.url) continue;
+  const label = esc(s.label);
+  if (citationHtml.includes(label)) {
+    citationHtml = citationHtml.replace(
+      label,
+      // Built as a string, so it misses <Link> -- these are all CEPR/NBER/
+      // FRBNY landing pages, i.e. always outbound.
+      `<a href="${s.url}" target="_blank" rel="noopener">${label}</a>`,
+    );
+  }
+}
+
+// Make the venue obvious at a glance. The journal name is almost always at the
+// head of the citation, but not always -- "Forthcoming, American Economic
+// Review." and the R&R line put it mid-string -- so match wherever it falls.
+if (d.journal) {
+  const j = esc(d.journal);
+  if (citationHtml.includes(j)) {
+    citationHtml = citationHtml.replace(j, `<strong class="pub__venue">${j}</strong>`);
+  }
+}
+
+const MONTHS: Record<string, string> = {
+  Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April', May: 'May', Jun: 'June',
+  Jul: 'July', Aug: 'August', Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December',
+};
+const version = d.version?.match(/^([A-Za-z]{3})(\d{2})$/);
+// The rail shows the year large with the month beneath it, so the version
+// marker is split rather than written out as a sentence.
+const versionMonth = version ? (MONTHS[version[1]] ?? version[1]) : null;
+---
+
+<li class="pub" id={paper.id} data-topics={d.topics.join(' ')}>
+  <div class="pub__rail">
+    {d.year && <div class="pub__year">{d.year}</div>}
+    {versionMonth && <div class="pub__month">{versionMonth}</div>}
+    {d.topics.length > 0 && (
+      <p class="pub__topics">
+        {d.topics.map((t) => <span class="topic-tag">{topicLabel[t] ?? t}</span>)}
+      </p>
+    )}
+  </div>
+
+  <div class="pub__body">
+    <Heading class="pub__title">
+      {href ? <Link href={href}>{d.title}</Link> : d.title}
+    </Heading>
+
+    <p class="pub__meta">
+      <span class="pub__authors">
+        J. di Giovanni{authors.length > 0 && ', '}
+        {authors.map((a, i) => (
+          <>
+            {i > 0 && ', '}
+            {a.url ? <Link href={a.url}>{a.name}</Link> : a.name}
+          </>
+        ))}
+      </span>
+      {citationHtml && <> · <span set:html={citationHtml} /></>}
+    </p>
+
+    {d.abstract && (
+      <details class="pub__abstract">
+        <summary>Abstract</summary>
+        <p>{d.abstract}</p>
+      </details>
+    )}
+
+    <p class="pub__actions">
+      {d.pdf && <Link href={d.pdf}>Paper</Link>}
+      {d.url && !d.pdf && <Link href={d.url}>Paper Link</Link>}
+      {d.appendix && <Link href={d.appendix}>Supplemental Appendix</Link>}
+      {d.doi && <Link href={`https://doi.org/${d.doi}`}>DOI</Link>}
+      {d.nonTechnical.map((l) => <Link href={l.url}>{l.label} →</Link>)}
+      {d.dataCode.map((l) => <Link href={l.url}>{l.label}</Link>)}
+    </p>
+
+    {d.press.length > 0 && (
+      <p class="pub__press">
+        <span class="pub__press-label">Coverage</span>
+        {d.press.map((l) => <Link href={l.url}>{l.label}</Link>)}
+      </p>
+    )}
+  </div>
+</li>

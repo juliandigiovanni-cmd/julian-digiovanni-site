@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Link from '../components/Link.astro';
+
+// GitHub Pages serves /404.html for any path it has no file for, as Apache did
+// through ErrorDocument 404 in deploy/htaccess. It can be served from any depth,
+// so every link on it has to be root-absolute.
+//
+// It exists because the WordPress site had a 404 page and this one replaces it.
+// Without it the host falls back to its own "Not Found", which has no way back
+// to the site.
+//
+// It also carries the redirects. Pages ignores .htaccess, so the two rules in
+// deploy/htaccess are repeated in the script below, which forwards a matching
+// path with location.replace. This is the one page on the site that ships any
+// JavaScript, and it is is:inline so Astro leaves it as written: a dozen lines,
+// no bundle. A visitor with JavaScript off, or a crawler, gets the 404 and the
+// links under it, which is the right answer for an address that has moved.
+//
+// Keep the rules in step with deploy/htaccess while Bluehost still serves the
+// site. The path is compared after decodeURIComponent, as Apache compares the
+// decoded path; neither rule needs it today, but a filename with a space would.
+---
+
+<Base title="Page not found" description="That page is not here.">
+  <h1 class="page-title">Page not found</h1>
+
+  <p class="prose" style="color: var(--ink-muted); margin-bottom: var(--space-md)">
+    That address does not exist on this site. A few pages moved when this site
+    replaced the old one, though every paper kept the address it already had.
+  </p>
+
+  <script is:inline>
+    (function () {
+      var path = location.pathname;
+      try { path = decodeURIComponent(path); } catch (e) { /* malformed escape: use it raw */ }
+
+      var to = null;
+      // /policy-blogs is the one live WordPress path the new site does not reproduce.
+      // With or without the trailing slash, as the RedirectMatch had it.
+      if (/^\/policy-blogs\/?$/.test(path)) to = '/policy-writing/';
+      // The working-paper version of the ECB Sintra piece was deleted in favour of the
+      // published proceedings version. The old site linked the working paper.
+      else if (path === '/Papers/DGKOS_InflationSupplyChainTrade.pdf')
+        to = '/Papers/DGKOS_InflationSupplyChainTrade_SintraFinal.pdf';
+
+      if (to) location.replace(to + location.search);
+    })();
+  </script>
+
+  <p class="home__links">
+    <Link href="/" class="home__link home__link--primary">Home &rarr;</Link>
+    <Link href="/research/" class="home__link">Research &rarr;</Link>
+    <Link href="/policy-writing/" class="home__link">Policy Writing &rarr;</Link>
+  </p>
+</Base>

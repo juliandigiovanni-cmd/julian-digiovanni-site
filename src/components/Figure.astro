@@ -1,0 +1,23 @@
+---
+/**
+ * A build-time chart with its caption and source line.
+ *
+ * `svg` is markup produced by src/lib/chart.ts, so it is ours rather than
+ * user input. The caption carries the reading of the figure; the source line
+ * names the data and its licence, which is not optional for the CC BY series.
+ */
+interface Props {
+  svg: string;
+  caption: string;
+  source: string;
+}
+const { svg, caption, source } = Astro.props;
+---
+
+<figure class="figure">
+  <div class="figure__plot" set:html={svg} />
+  <figcaption>
+    {caption}
+    <span class="figure__src">{source}</span>
+  </figcaption>
+</figure>

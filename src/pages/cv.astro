@@ -1,0 +1,172 @@
+---
+import Base from '../layouts/Base.astro';
+import Link from '../components/Link.astro';
+import { cv } from '../data/cv';
+
+const roleGroups = [
+  { label: 'Editorial', items: cv.service.editorial },
+  { label: 'Policy', items: cv.service.policy },
+  { label: 'University', items: cv.service.university },
+];
+---
+
+<Base
+  title="CV"
+  description="Positions, education, grants, teaching and service. Full CV as a PDF."
+>
+  <div class="cv-head">
+    <h1 class="page-title">Curriculum vitae</h1>
+    <Link href={cv.pdf} class="home__link home__link--primary">
+      Download the full CV (PDF, {cv.pdfDate})
+    </Link>
+  </div>
+
+  <p class="prose" style="color: var(--ink-muted)">
+    Publications are on the <a href="/research/">research page</a>. The complete list of
+    seminars, conferences and discussant work is in the PDF.
+  </p>
+
+  <section class="section">
+    <header class="section-head"><h2>Current positions</h2></header>
+    <dl class="cv-list">
+      {cv.current.map((p) => (
+        <>
+          <dt>{p.years}</dt>
+          <dd><strong>{p.role}</strong><br /><span class="cv-detail">{p.org}</span></dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Previous positions</h2></header>
+    {cv.previous.map((g) => (
+      <div class="cv-group">
+        <h3 class="cv-group__name">{g.institution}</h3>
+        <dl class="cv-list">
+          {g.roles.map((r) => (
+            <>
+              <dt>{r.years}</dt>
+              <dd>{r.role}<span class="cv-detail">, {r.detail}</span></dd>
+            </>
+          ))}
+        </dl>
+      </div>
+    ))}
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Education</h2></header>
+    <dl class="cv-list">
+      {cv.education.map((e) => (
+        <>
+          <dt>{e.years}</dt>
+          <dd>
+            <strong>{e.degree}</strong>, {e.institution}
+            {e.detail.map((d) => <><br /><span class="cv-detail">{d}</span></>)}
+          </dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Professional affiliations</h2></header>
+    <dl class="cv-list">
+      {cv.affiliations.map((a) => (
+        <>
+          <dt>{a.years}</dt>
+          <dd>{a.role}<span class="cv-detail">, {a.org}</span></dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Grants, fellowships and awards</h2></header>
+    <dl class="cv-list">
+      {cv.grants.map((g) => (
+        <>
+          <dt>{g.years}</dt>
+          <dd>{g.text}</dd>
+        </>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Teaching</h2></header>
+    <dl class="cv-list">
+      {cv.teaching.map((t) => (
+        <>
+          <dt>{t.years}</dt>
+          <dd>
+            <strong>{t.institution}</strong><br />
+            <span class="cv-detail">{t.courses.join(' · ')}</span>
+          </dd>
+        </>
+      ))}
+    </dl>
+
+    <h3 class="cv-sub">Summer schools</h3>
+    <dl class="cv-list">
+      {cv.summerSchools.map((s) => (<><dt>{s.years}</dt><dd>{s.text}</dd></>))}
+    </dl>
+
+    <h3 class="cv-sub">Mini-PhD classes</h3>
+    <dl class="cv-list">
+      {cv.miniPhd.map((s) => (<><dt>{s.years}</dt><dd>{s.text}</dd></>))}
+    </dl>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Editorial and service</h2></header>
+
+    {roleGroups.map((g) => (
+      <>
+        <h3 class="cv-sub">{g.label}</h3>
+        <dl class="cv-list">
+          {g.items.map((i) => (
+            <>
+              <dt>{i.years}</dt>
+              <dd><strong>{i.org}</strong><span class="cv-detail">, {i.role}</span></dd>
+            </>
+          ))}
+        </dl>
+      </>
+    ))}
+
+    <h3 class="cv-sub">Conference organisation</h3>
+    <ul class="cv-plain">
+      {cv.service.conferences.map((c) => <li set:html={c} />)}
+    </ul>
+
+    <h3 class="cv-sub">Grant review</h3>
+    <p class="cv-detail prose">{cv.service.grantReviewer}</p>
+
+    <details class="pub__abstract">
+      <summary>Refereeing</summary>
+      <p>{cv.service.referee}</p>
+    </details>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Published discussions</h2></header>
+    <ul class="cv-plain">
+      {cv.discussions.map((d) => <li set:html={d} />)}
+    </ul>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Short-term visits</h2></header>
+    <p class="cv-detail prose">{cv.shortTermVisits}</p>
+  </section>
+
+  <section class="section">
+    <header class="section-head"><h2>Other</h2></header>
+    <dl class="cv-list">
+      <dt>Citizenship</dt><dd>{cv.other.citizenship}</dd>
+      <dt>Languages</dt><dd>{cv.other.languages}</dd>
+    </dl>
+  </section>
+</Base>

@@ -1,0 +1,7 @@
+# Everything here is meant to be found. The only rule is a pointer to the
+# sitemap, which @astrojs/sitemap generates at build time.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://julian.digiovanni.ca/sitemap-index.xml

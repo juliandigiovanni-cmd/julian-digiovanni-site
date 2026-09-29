@@ -1,0 +1,46 @@
+---
+import { site } from '../data/site';
+
+/**
+ * One place that decides whether a link leaves the site.
+ *
+ * Anything that takes the reader away, or hands them a file, opens in a new tab
+ * so they don't lose their place in a list they were scanning. Navigation
+ * between pages of this site stays put.
+ *
+ * This is a component rather than a convention because there are well over a
+ * hundred links, most of them generated from scraped data -- a rule people have
+ * to remember at each call site would be broken by the next scraper change.
+ */
+interface Props {
+  href: string;
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, ...rest } = Astro.props;
+
+function leavesTheSite(h: string): boolean {
+  if (!h) return false;
+  if (h.startsWith('mailto:') || h.startsWith('#')) return false;
+  // A file is not a page -- new tab even when it is ours. Replication archives
+  // under /Papers/ are downloads in exactly the way a PDF is.
+  // Keep this list in step with should_leave() in scripts/check-links.py.
+  if (/\.(pdf|zip|dta)($|[?#])/i.test(h)) return true;
+  if (/^https?:\/\//i.test(h)) {
+    try {
+      return new URL(h).host !== new URL(site.url).host;
+    } catch {
+      return true;
+    }
+  }
+  return false; // root-relative path: our own page
+}
+
+const away = leavesTheSite(href);
+
+// Note the markup below puts <slot /> tight against the tags. A newline there
+// renders as a space inside the link text, showing up as "Name , Name" in an
+// author list. An HTML comment would ship into every link, so this stays here.
+---
+
+<a href={href} {...rest} {...(away ? { target: '_blank', rel: 'noopener' } : {})}><slot /></a>

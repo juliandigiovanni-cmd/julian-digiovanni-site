@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PaperEntry from '../components/PaperEntry.astro';
+import { sectionLabel, topicLabel } from '../data/site';
+
+const papers = await getCollection('papers');
+
+// Working papers lead. This is the convention in the field -- Levchenko and Hale
+// both do it, and Julian's own WordPress site did too.
+const order = ['working-paper', 'peer-reviewed', 'other-research'] as const;
+const groups = order.map((section) => ({
+  section,
+  label: sectionLabel[section],
+  items: papers
+    .filter((p) => p.data.section === section)
+    .sort((a, b) => (b.data.year ?? 9999) - (a.data.year ?? 9999)),
+}));
+
+const counts = new Map<string, number>();
+for (const p of papers) for (const t of p.data.topics) counts.set(t, (counts.get(t) ?? 0) + 1);
+const topics = Object.keys(topicLabel).filter((t) => counts.has(t));
+---
+
+<Base
+  title="Research"
+  description="Working papers and published research on international spillovers, supply chains, and macroeconomic fluctuations."
+>
+  <h1 class="page-title">Research</h1>
+
+  <nav class="section-nav" aria-label="Sections">
+    {groups.map((g) => (
+      <a href={`#${g.section}`}>{g.label} <span class="section-nav__n">{g.items.length}</span></a>
+    ))}
+  </nav>
+
+  <div class="filter" data-filter-bar>
+    <p class="filter__label" id="filter-label">Filter by topic</p>
+    <div class="filter__chips" role="group" aria-labelledby="filter-label">
+      <button class="filter-chip" type="button" data-topic="" aria-pressed="true">All</button>
+      {topics.map((t) => (
+        <button class="filter-chip" type="button" data-topic={t} aria-pressed="false">
+          {topicLabel[t]} <span class="filter-chip__n">{counts.get(t)}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <p class="filter-empty" hidden data-filter-empty>No papers match that topic.</p>
+
+  {groups.map((g) => (
+    <section class="section" id={g.section} data-group>
+      <header class="section-head">
+        <h2>{g.label}</h2>
+        <span class="section-count" data-count-for={g.section}>{g.items.length}</span>
+      </header>
+      <ul class="pub-list">
+        {g.items.map((p) => <PaperEntry paper={p} />)}
+      </ul>
+    </section>
+  ))}
+</Base>
+
+<script>
+  // Progressive enhancement. Without JavaScript the chips are inert, every paper
+  // stays visible, and the section nav still works because it is plain anchors.
+  const bar = document.querySelector<HTMLElement>('[data-filter-bar]');
+  const empty = document.querySelector<HTMLElement>('[data-filter-empty]');
+  if (bar) {
+    const chips = [...bar.querySelectorAll<HTMLButtonElement>('.filter-chip')];
+    const entries = [...document.querySelectorAll<HTMLElement>('.pub[data-topics]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-group]')];
+
+    // A set, not a single value: the homepage theme links point here with
+    // several topics at once, e.g. ?topic=trade,firm-dynamics.
+    const apply = (wanted: string[]) => {
+      const want = new Set(wanted.filter(Boolean));
+      for (const el of entries) {
+        const has = (el.dataset.topics ?? '').split(' ').filter(Boolean);
+        el.hidden = want.size > 0 && !has.some((t) => want.has(t));
+      }
+      for (const g of groups) {
+        const shown = g.querySelectorAll('.pub:not([hidden])').length;
+        g.hidden = shown === 0;
+        const n = g.querySelector('[data-count-for]');
+        if (n) n.textContent = String(shown);
+      }
+      if (empty) empty.hidden = entries.some((e) => !e.hidden);
+      for (const c of chips) {
+        const t = c.dataset.topic ?? '';
+        c.setAttribute('aria-pressed', String(t === '' ? want.size === 0 : want.has(t)));
+      }
+      const url = new URL(location.href);
+      if (want.size) url.searchParams.set('topic', [...want].join(','));
+      else url.searchParams.delete('topic');
+      history.replaceState(null, '', url);
+    };
+
+    bar.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-chip');
+      if (chip) apply([chip.dataset.topic ?? '']);
+    });
+
+    const initial = (new URL(location.href).searchParams.get('topic') ?? '')
+      .split(',').map((s) => s.trim()).filter(Boolean);
+    if (initial.length) apply(initial);
+  }
+
+  // Highlight the section currently in view. Enhancement only.
+  const navLinks = [...document.querySelectorAll<HTMLAnchorElement>('.section-nav a')];
+  const sections = navLinks
+    .map((a) => document.querySelector<HTMLElement>(a.getAttribute('href')!))
+    .filter(Boolean) as HTMLElement[];
+  if (sections.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (obs) => {
+        for (const o of obs) {
+          if (!o.isIntersecting) continue;
+          for (const a of navLinks) {
+            a.classList.toggle('is-current', a.getAttribute('href') === `#${o.target.id}`);
+          }
+        }
+      },
+      { rootMargin: '-20% 0px -70% 0px' },
+    );
+    for (const s of sections) io.observe(s);
+  }
+</script>
