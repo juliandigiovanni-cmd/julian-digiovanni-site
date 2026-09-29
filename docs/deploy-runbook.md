@@ -8,10 +8,13 @@
 > DNS points at it.
 >
 > **One thing this runbook relied on does not carry over.** It left `/Papers/` on the
-> server because the server held more than the repo: the ten replication archives are not
-> in `public/Papers/`, so on Pages the `dataCode` links to them 404. They need a new home,
-> and the links need to follow, before DNS moves. A copy was downloaded on 2026-09-29 to
-> `Julian/bluehost-backup-2026-09/Papers/`, outside the repo.
+> server because the server held more than the repo: nine replication archives (not ten,
+> as counted below; the old WordPress database references nine) that are not in
+> `public/Papers/`. On 2026-09-29 they moved to the assets of the `replication-files`
+> release on GitHub, since the largest is over GitHub's 100 MB file limit. The `dataCode`
+> links now point there, and `src/pages/404.astro` forwards the old `/Papers/*.zip`
+> addresses to them. A copy is also in `Julian/bluehost-backup-2026-09/Papers/`, outside
+> the repo.
 
 Replacing the WordPress site at `julian.digiovanni.ca` with this Astro build, on Bluehost
 shared hosting, through the cPanel File Manager.

@@ -12,9 +12,10 @@ import Link from '../components/Link.astro';
 //
 // It also carries the redirects. Pages ignores .htaccess, so the two rules in
 // deploy/htaccess are repeated in the script below, which forwards a matching
-// path with location.replace. This is the one page on the site that ships any
-// JavaScript, and it is is:inline so Astro leaves it as written: a dozen lines,
-// no bundle. A visitor with JavaScript off, or a crawler, gets the 404 and the
+// path with location.replace. A third rule covers the replication archives,
+// which Apache served as plain files from /Papers/. This is the one page on the
+// site that ships any JavaScript, and it is is:inline so Astro leaves it as
+// written: a few lines, no bundle. A visitor with JavaScript off, or a crawler, gets the 404 and the
 // links under it, which is the right answer for an address that has moved.
 //
 // Keep the rules in step with deploy/htaccess while Bluehost still serves the
@@ -43,6 +44,12 @@ import Link from '../components/Link.astro';
       // published proceedings version. The old site linked the working paper.
       else if (path === '/Papers/DGKOS_InflationSupplyChainTrade.pdf')
         to = '/Papers/DGKOS_InflationSupplyChainTrade_SintraFinal.pdf';
+      // The replication archives lived in /Papers/ on Bluehost, and journals' replication
+      // pages still point there. They are too big for the repo (one is 195 MB), so they
+      // are assets on the replication-files release. Only the nine that existed are
+      // listed: any other name should 404 here rather than on GitHub.
+      else if (/^\/Papers\/(China_replication|Data_Programs_Comovement|Data_Programs_Volatility|data7e|diGiovanni_Hale_StockGlobalNetwork_ReplicationFiles|ExpenditureSwitching_replication|FirmGranular_replication|jjdatashare|RESTAT_europe1)\.zip$/.test(path))
+        to = 'https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/' + path.slice('/Papers/'.length);
 
       if (to) location.replace(to + location.search);
     })();

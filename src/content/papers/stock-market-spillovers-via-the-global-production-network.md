@@ -9,7 +9,7 @@ year: 2022
 citation: "Journal of Finance, 77:6 (December 2022), 3373–3421."
 pdf: "/Papers/diGiovanni_Hale_JF22.pdf"
 appendix: "/Papers/diGiovanni_Hale_StockGlobalNetwork_InternetAppendix.pdf"
-dataCode: [{"label": "Data and Programs", "url": "/Papers/diGiovanni_Hale_StockGlobalNetwork_ReplicationFiles.zip"}]
+dataCode: [{"label": "Data and Programs", "url": "https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/diGiovanni_Hale_StockGlobalNetwork_ReplicationFiles.zip"}]
 topics:
   - "monetary-policy"
   - "supply-chains"

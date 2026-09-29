@@ -10,7 +10,7 @@ year: 2014
 citation: "Econometrica, 82:4 (July 2014), 1303–1340."
 pdf: "/Papers/diGiovanni_Levchenko_Mejean_ECMA14.pdf"
 appendix: "/Papers/diGiovanni_Levchenko_Mejean_Supp_ECMA14.pdf"
-dataCode: [{"label": "Programs", "url": "/Papers/FirmGranular_replication.zip"}]
+dataCode: [{"label": "Programs", "url": "https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/FirmGranular_replication.zip"}]
 topics:
   - "firm-dynamics"
   - "trade"

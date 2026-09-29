@@ -9,7 +9,7 @@ year: 2008
 citation: "Journal of International Economics, 74:2 (March 2008), 341–361."
 pdf: "/Papers/diGiovanni_Shambaugh_JIE08.pdf"
 appendix: "/Papers/diGiovanni_Shambaugh_Appendix_JIE08.pdf"
-dataCode: [{"label": "Data", "url": "/Papers/jjdatashare.zip"}]
+dataCode: [{"label": "Data", "url": "https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/jjdatashare.zip"}]
 topics:
   - "monetary-policy"
   - "international-finance"

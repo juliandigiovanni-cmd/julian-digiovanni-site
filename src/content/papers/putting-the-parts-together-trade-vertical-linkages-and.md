@@ -9,7 +9,7 @@ year: 2010
 citation: "American Economic Journal: Macroeconomics, 2:3 (April 2010), 95–124."
 pdf: "/Papers/diGiovanni_Levchenko_AEJmacro10.pdf"
 appendix: "/Papers/diGiovanni_Levchenko_Appendix_AEJmacro10.pdf"
-dataCode: [{"label": "Data and Programs", "url": "/Papers/Data_Programs_Comovement.zip"}]
+dataCode: [{"label": "Data and Programs", "url": "https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/Data_Programs_Comovement.zip"}]
 topics:
   - "trade"
   - "supply-chains"

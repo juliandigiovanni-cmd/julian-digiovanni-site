@@ -9,7 +9,7 @@ year: 2016
 citation: "American Economic Review, 106:12 (December 2016), 3898–3931."
 pdf: "/Papers/Bems_diGiovanni_AER16.pdf"
 appendix: "/Papers/Bems_diGiovanni_Appendix_AER16.pdf"
-dataCode: [{"label": "Data and Programs", "url": "/Papers/ExpenditureSwitching_replication.zip"}]
+dataCode: [{"label": "Data and Programs", "url": "https://github.com/juliandigiovanni-cmd/julian-digiovanni-site/releases/download/replication-files/ExpenditureSwitching_replication.zip"}]
 topics:
   - "international-finance"
   - "trade"
