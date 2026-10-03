@@ -16,7 +16,7 @@
 
 export const cv = {
   pdf: '/cv_diGiovanni.pdf',
-  pdfDate: 'September 2026',
+  pdfDate: 'October 2026',
 
   current: [
     { years: '2025–', role: 'Economic Research Advisor', org: "International Studies, Research & Statistics Group, Federal Reserve Bank of New York" },
@@ -118,14 +118,6 @@ export const cv = {
       { org: 'Journal of International Economics', role: 'Associate editor', years: '2016–2021' },
       { org: 'Economic Policy', role: 'Panel member', years: '2014–2016' },
     ],
-    policy: [
-      { org: 'FRBNY', role: 'Member of Priority Leadership Team on Climate Change', years: '2021–2024' },
-      { org: 'FRBNY', role: 'Member of Judgmental Forecasting Team (International Trade)', years: '2020–2022' },
-    ],
-    university: [
-      { org: 'UPF', role: 'Junior Recruiting Chair', years: '2014–2018' },
-      { org: 'UPF', role: 'Tenure Sub-Committee Chair', years: '2015–2016' },
-    ],
     conferences: [
       'CEBRA ITM Program Annual Conference (2020–24), Scientific Program Committee',
       '33rd Annual Congress of the European Economic Association (2018), Scientific Program Committee',
@@ -133,7 +125,7 @@ export const cv = {
       '42nd Spanish Economic Association Meeting (2017), Local Committee Chair',
       'European Winter Meetings of the Econometric Society (2017), Local Committee Chair',
       '“Rethinking Competitiveness, Structural Reforms, and Macro Policy” Conference, Bank of Italy-CEPR-CEBR (2017), Co-Organizer',
-      '“Firms in the Global Economy” Workshop, Barcelona GSE Summer Forum (2014–23), Co-Organizer',
+      '“Firms in the Global Economy” Workshop, Barcelona GSE Summer Forum (2014–26), Co-Organizer',
       '31st Annual Congress of the European Economic Association (2016), Scientific Program Committee',
       '9th Annual Meeting of the Portuguese Economic Journal (2015), Scientific Program Committee',
       'IMF Research Department (2010–11), Seminar Committee Chair',

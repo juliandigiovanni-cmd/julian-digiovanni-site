@@ -4,9 +4,7 @@ import Link from '../components/Link.astro';
 import { cv } from '../data/cv';
 
 const roleGroups = [
-  { label: 'Editorial', items: cv.service.editorial },
-  { label: 'Policy', items: cv.service.policy },
-  { label: 'University', items: cv.service.university },
+  { label: 'Editorial services', items: cv.service.editorial },
 ];
 ---
 
@@ -120,7 +118,7 @@ const roleGroups = [
   </section>
 
   <section class="section">
-    <header class="section-head"><h2>Editorial and service</h2></header>
+    <header class="section-head"><h2>Professional activities</h2></header>
 
     {roleGroups.map((g) => (
       <>
