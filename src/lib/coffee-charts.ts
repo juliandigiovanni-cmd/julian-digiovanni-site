@@ -400,14 +400,20 @@ export function valuationChart() {
   const DOMAIN: [number, number] = [-66, 52];
   const TICKS = [-60, -40, -20, 0, 20, 40];
 
+  // The data area must be square for the 45-degree line to be drawn at 45 degrees.
+  // A square the full 680 wide would make this figure half as tall again as the
+  // cappuccino one above it, so the frame keeps the shared width (and with it the
+  // type size) at a height near the others, and the square is centred inside it.
+  const HEIGHT = 480;
+  const side = HEIGHT - 10 - 46;
+  const pad = (WIDTH - side - 58 - 24) / 2;
+
   return renderPlot(
     {
       width: WIDTH,
-      // The plot width plus the vertical margins, so the data area is square and,
-      // with the shared domain above, the 45-degree line is drawn at 45 degrees.
-      height: WIDTH - 58 - 24 + 10 + 46,
-      marginLeft: 58,
-      marginRight: 24,
+      height: HEIGHT,
+      marginLeft: 58 + pad,
+      marginRight: 24 + pad,
       marginTop: 10,
       marginBottom: 46,
       x: {

@@ -256,5 +256,6 @@ Things worth knowing before reading the figure:
 - **Restricting to urban responses changes nothing** (r = 0.999 with the baseline), which
   is worth knowing because the American sample leans suburban.
 - **Square data area.** The 45-degree line only means what the caption says if the x and y
-  ranges are equally long in pixels, hence the height computed from the width in
-  `valuationChart` rather than the 440 the other figures use.
+  ranges are equally long in pixels. `valuationChart` keeps the shared 680 width and
+  a 480 height, close to the 440 the other figures use, and centres a square data area
+  inside it with wide side margins.
