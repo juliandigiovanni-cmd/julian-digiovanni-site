@@ -296,3 +296,164 @@ export function cappuccinoChart() {
     'Minutes of barista work needed to buy one cappuccino, against real GDP per capita, 36 countries',
   );
 }
+
+
+/**
+ * The same survey read as an exchange-rate index, against the Big Mac.
+ *
+ * Hoffmann's `full_data` records each price in local currency, and a cappuccino is
+ * about as nontradable as a good gets, so the Economist's Big Mac arithmetic applies:
+ * a country's price over the American price is an implied exchange rate, and that over
+ * the market rate is how far the currency sits from the dollar. Both numbers below are
+ * that calculation, in per cent.
+ *
+ * `capp` is ours. Country price is the geometric mean of the responses quoted in the
+ * country's own currency, for the 36 countries answered at least ten times, against an
+ * American base of $4.91. Market rates are the GOOGLEFINANCE values cached in the
+ * workbook, which sit within half a per cent of the Economist's July rates. A mean of
+ * logs rather than a median because prices pile up on round numbers -- the American
+ * median is exactly $5.00 -- though the two give valuations correlated at 0.997.
+ *
+ * `bigmac` is the Economist's July 2026 index, github.com/TheEconomist/big-mac-data.
+ * Individual euro countries are computed here from its source file by the same formula,
+ * since the published index carries only a single euro area; where both exist they agree
+ * to five decimal places.
+ *
+ * Two of the 36 are missing: the United States, which is zero on both by construction,
+ * and Russia, which McDonald's left in 2022.
+ *
+ * Working, including bootstrap intervals and a GDP-adjusted version, is in
+ * analysis/cappuccino-ppp/ one directory up from the site.
+ */
+const VALUATION = [
+  { country: 'Italy', capp: -57, bigmac: 21 },
+  { country: 'Philippines', capp: -55, bigmac: -56 },
+  { country: 'India', capp: -48, bigmac: -61 },
+  { country: 'Brazil', capp: -42, bigmac: -24 },
+  { country: 'Malaysia', capp: -37, bigmac: -43 },
+  { country: 'Argentina', capp: -35, bigmac: -5 },
+  { country: 'Spain', capp: -34, bigmac: 8 },
+  { country: 'New Zealand', capp: -33, bigmac: -17 },
+  { country: 'Slovakia', capp: -31, bigmac: -8 },
+  { country: 'Chile', capp: -29, bigmac: -13 },
+  { country: 'Romania', capp: -29, bigmac: -36 },
+  { country: 'Greece', capp: -28, bigmac: -10 },
+  { country: 'Mexico', capp: -25, bigmac: 1 },
+  { country: 'Czechia', capp: -25, bigmac: -13 },
+  { country: 'Canada', capp: -24, bigmac: -7 },
+  { country: 'Australia', capp: -24, bigmac: -4 },
+  { country: 'Portugal', capp: -22, bigmac: 4 },
+  { country: 'Turkey', capp: -20, bigmac: 11 },
+  { country: 'Hungary', capp: -18, bigmac: -15 },
+  { country: 'Poland', capp: -15, bigmac: 0 },
+  { country: 'Singapore', capp: -11, bigmac: -7 },
+  { country: 'Germany', capp: -9, bigmac: 29 },
+  { country: 'Netherlands', capp: -7, bigmac: 15 },
+  { country: 'Ireland', capp: -5, bigmac: 21 },
+  { country: 'Belgium', capp: -5, bigmac: -1 },
+  { country: 'Austria', capp: -4, bigmac: 4 },
+  { country: 'Israel', capp: 0, bigmac: 23 },
+  { country: 'Sweden', capp: 5, bigmac: 15 },
+  { country: 'UK', capp: 5, bigmac: 19 },
+  { country: 'Finland', capp: 6, bigmac: 17 },
+  { country: 'France', capp: 10, bigmac: 3 },
+  { country: 'Norway', capp: 17, bigmac: 29 },
+  { country: 'Switzerland', capp: 41, bigmac: 45 },
+  { country: 'Denmark', capp: 42, bigmac: 13 },
+];
+
+// Eight labels out of 34. The four corners of the argument -- Italy and Denmark off the
+// line, Switzerland and India on it -- plus Germany, which the prose sets against Italy,
+// and three more that sit clear of their neighbours. The rest would collide at 680px.
+const VAL_PLACEMENT: Record<string, Placement> = {
+  Italy: { anchor: 'start', dx: 8, dy: 4 },
+  Denmark: { anchor: 'end', dx: -8, dy: 0 },
+  Switzerland: { anchor: 'end', dx: -8, dy: 12 },
+  India: { anchor: 'start', dx: 8, dy: 0 },
+  Philippines: { anchor: 'start', dx: 8, dy: 10 },
+  Germany: { anchor: 'middle', dx: 0, dy: -12 },
+  Spain: { anchor: 'middle', dx: 0, dy: -12 },
+  Argentina: { anchor: 'end', dx: -8, dy: 0 },
+};
+
+export function valuationChart() {
+  // Pearson r, computed here so the caption cannot drift from the data above.
+  const n = VALUATION.length;
+  const mx = VALUATION.reduce((a, d) => a + d.bigmac, 0) / n;
+  const my = VALUATION.reduce((a, d) => a + d.capp, 0) / n;
+  const sxy = VALUATION.reduce((a, d) => a + (d.bigmac - mx) * (d.capp - my), 0);
+  const sxx = VALUATION.reduce((a, d) => a + (d.bigmac - mx) ** 2, 0);
+  const syy = VALUATION.reduce((a, d) => a + (d.capp - my) ** 2, 0);
+  const r = sxy / Math.sqrt(sxx * syy);
+
+  const groups = new Map<string, { place: Placement; rows: typeof VALUATION }>();
+  for (const d of VALUATION) {
+    const place = VAL_PLACEMENT[d.country];
+    if (!place) continue;
+    const key = `${place.anchor}|${place.dx}|${place.dy}`;
+    if (!groups.has(key)) groups.set(key, { place, rows: [] });
+    groups.get(key)!.rows.push(d);
+  }
+
+  // One domain on both axes, or the 45-degree line would not be at 45 degrees and
+  // a point's distance from it would stop meaning what the caption says it means.
+  const DOMAIN: [number, number] = [-66, 52];
+  const TICKS = [-60, -40, -20, 0, 20, 40];
+
+  return renderPlot(
+    {
+      width: WIDTH,
+      // The plot width plus the vertical margins, so the data area is square and,
+      // with the shared domain above, the 45-degree line is drawn at 45 degrees.
+      height: WIDTH - 58 - 24 + 10 + 46,
+      marginLeft: 58,
+      marginRight: 24,
+      marginTop: 10,
+      marginBottom: 46,
+      x: {
+        domain: DOMAIN,
+        ticks: TICKS,
+        tickFormat: (d: number) => (d > 0 ? `+${d}%` : `${d}%`),
+        label: 'Big Mac index, July 2026',
+        labelAnchor: 'left',
+        grid: true,
+      },
+      y: {
+        domain: DOMAIN,
+        ticks: TICKS,
+        tickFormat: (d: number) => (d > 0 ? `+${d}%` : `${d}%`),
+        label: 'Cappuccino XR index',
+        labelAnchor: 'top',
+        grid: true,
+      },
+      style: { fontSize: '12px' },
+      marks: [
+        Plot.line(
+          [
+            { x: DOMAIN[0], y: DOMAIN[0] },
+            { x: DOMAIN[1], y: DOMAIN[1] },
+          ],
+          { x: 'x', y: 'y', stroke: NEUTRAL, strokeWidth: 1.5, strokeDasharray: '4,3' },
+        ),
+        Plot.ruleX([0], { stroke: RULE }),
+        Plot.ruleY([0], { stroke: RULE }),
+        Plot.dot(VALUATION, {
+          x: 'bigmac', y: 'capp',
+          r: 4, fill: ACCENT, fillOpacity: 0.85,
+        }),
+        ...[...groups.values()].map(({ place, rows }) =>
+          Plot.text(rows, {
+            x: 'bigmac', y: 'capp',
+            text: 'country',
+            fontSize: 11,
+            fill: INK_MUTED,
+            textAnchor: place.anchor,
+            dx: place.dx,
+            dy: place.dy,
+          }),
+        ),
+      ],
+    },
+    `Over- and undervaluation against the US dollar on two indices, 34 countries, correlation ${r.toFixed(2)}`,
+  );
+}

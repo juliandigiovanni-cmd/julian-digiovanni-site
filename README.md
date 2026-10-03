@@ -39,7 +39,7 @@ and rebuild — the templates render whatever is there.
 | Topic labels and filter order | `src/data/site.ts` (`topicLabel`) |
 | Schemas | `src/content.config.ts` |
 | CV page content | `src/data/cv.ts` (transcribed by hand — see below) |
-| Coffee page text and its figure | `src/pages/coffee.astro`, `src/lib/coffee-charts.ts` |
+| Coffee page text and its three figures | `src/pages/coffee.astro`, `src/lib/coffee-charts.ts` |
 | Paper PDFs (73) | `public/Papers/` |
 
 Every hook field on a paper is optional, so a half-filled entry renders
@@ -79,9 +79,14 @@ unused, in case that changes.
 **Figures are rendered to SVG at build time.** `src/lib/chart.ts` runs Observable
 Plot against a linkedom document and Astro inlines the markup, so a page with a
 chart on it still ships no client JavaScript. Don't reach for a browser charting
-library: the only figure on the site is static, and `<Figure>` expects an SVG
+library: every figure on the site is static, and `<Figure>` expects an SVG
 string. Data behind a figure is hard-coded in `src/lib/coffee-charts.ts` with its
 source in a comment; there is no fetch step and nothing to refresh at build time.
+Captions and source lines are justified and hyphenated, like the body text
+(`.figure figcaption` in `src/styles/base.css`).
+The three arrays there are `STAGES`, `CAPPUCCINO` and `VALUATION`, and the
+last two share one GDP series, since `VALUATION`'s working script reads the GDP
+figures out of `CAPPUCCINO` rather than keeping a second copy.
 
 **Light only. No dark mode.** Julian designs against light and wants every
 visitor to see the same page, as on George's site. Don't reintroduce a
@@ -124,6 +129,8 @@ item left is the **deploy pipeline** — nothing has been uploaded anywhere yet.
 The runbook for the first Bluehost cutover is `docs/deploy-runbook.md`, and the
 `.htaccess` it uploads is `deploy/htaccess`.
 
-Key figures are no longer outstanding: four were built for the Coffee page and one
-kept. `docs/coffee-figures.md` records what the other three showed and where their
-data came from, so any of them is rebuildable without redoing the research.
+Key figures are no longer outstanding. Four were built for the Coffee page and one
+kept; two more were added later, on the cappuccino index and on what it implies for
+exchange rates. `docs/coffee-figures.md` records all of it — the three that were cut
+and where their data came from, so any of them is rebuildable without redoing the
+research, and the method behind the two that were added.

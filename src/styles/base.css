@@ -449,6 +449,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
    in the palette does it without introducing a second colour. */
 .coffee__name { color: var(--accent); margin-bottom: var(--space-xs); }
 
+/* A subheading that follows the link buttons, which carry no bottom margin. */
+.coffee__subhead { margin-top: var(--space-lg); }
+
 /* The line under the name. Serif so it sits with the title it belongs to, muted
    and a step down in size so it reads as a subtitle. */
 .coffee__deck {
@@ -474,6 +477,9 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
   color: var(--ink-muted);
   line-height: 1.5;
   margin-top: var(--space-sm);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 .figure__src { display: block; color: var(--ink-faint); }
 

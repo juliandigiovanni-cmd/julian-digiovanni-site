@@ -144,9 +144,11 @@ the CEPR book chapter.
 
 ## The Coffee page
 
-`/coffee/` carries two parts: Know your Grounds, the specialty coffee map Julian built,
-and a section on the coffee supply chain — where the money in a kilogram goes, and what
-climate and other disruption do to each stage of the chain.
+`/coffee/` carries three parts: Know your Grounds, the specialty coffee map Julian built;
+a section on the coffee supply chain — where the money in a kilogram goes, and what
+climate and other disruption do to each stage of the chain; and the cappuccino index,
+which now runs two figures, one on barista minutes against income and one on what the
+same survey implies for exchange rates.
 
 Two things about it are worth knowing before editing. The value split is **German
 national-brand ground coffee with the taxes stripped out**, because a flat excise of
@@ -158,8 +160,18 @@ And **no café cost breakdown appears anywhere on the page**, deliberately. Nobo
 publishes one credibly: the trade-press and consultancy figures are uncited, and several
 recent ones appear machine-generated. The café stage rests on Starbucks' 10-K instead.
 
+The exchange-rate figure is the newest thing on the page, live since 3 October 2026. Its
+prose was rewritten once, and the first draft's claim that a nontradable cappuccino is a
+better purchasing-power benchmark than the Big Mac was dropped as backwards; the reasoning
+is in `docs/coffee-figures.md`. One substantive point is recorded there rather than
+settled: the valuations are anchored on the American cappuccino price, so the ranking of
+currencies is sounder than the level, and a sample-average numeraire is the alternative if
+the level ever has to carry weight.
+
 `docs/coffee-figures.md` has the figures that were cut, their data sources and licences,
-and the widely-quoted numbers that were checked and rejected.
+the widely-quoted numbers that were checked and rejected, and the method behind both
+cappuccino figures. The working for the exchange-rate one is outside the repo, in
+`Julian/analysis/cappuccino-ppp/`.
 
 ## Waiting on Julian
 

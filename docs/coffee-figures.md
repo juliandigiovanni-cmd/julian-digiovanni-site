@@ -106,7 +106,8 @@ wage read upside down, so India's 172 minutes is the lowest real wage on the cha
 the highest.
 
 Two framings were written for this section and both were cut. The first set the index
-against the Big Mac index, and went for not flowing. The second named Balassa-Samuelson,
+against the Big Mac index, and went for not flowing — it came back later as a second
+figure, which has its own section below. The second named Balassa-Samuelson,
 and went for a better reason worth recording, because the flavour is real and someone
 will notice it again: the paragraph had to claim that cappuccino prices rise with income,
 while the only chart on the page slopes down. That asks a reader to take the claim on
@@ -174,3 +175,86 @@ Things that cost time to discover:
   averaged in. The caption used to say so and no longer does -- it was cut as too much
   detail for this page, along with the note on which countries are labelled. Worth knowing
   before reading anything into where those two sit.
+
+## The cappuccino as an exchange-rate index
+
+The second figure in the same section, added after the first. The page calls the measure
+the Cappuccino Exchange Rate Index, labelled "Cappuccino XR index" on the figure, and
+gives it its own `h3` ("A new coffee-based measure of exchange-rate valuation") after the Hoffmann
+credit and links, which close the barista-minutes part. Hoffmann's `full_data`
+records each price in local currency, so the survey supports the Big Mac arithmetic: a
+country's price over the American price is an implied exchange rate, and that over the
+market rate is the over- or undervaluation against the dollar. The figure plots our
+cappuccino valuation against the Economist's Big Mac valuation for the 34 countries in
+both, with a 45-degree line. Pearson r is 0.69, Spearman 0.69, and 71% of countries take
+the same sign.
+
+The prose has been through one rewrite with Julian, and the section went live on 3 October 2026.
+The first draft argued that the cappuccino is a better Big Mac than the Big Mac because
+under four per cent of it ever crosses a border. That was cut because it gets the
+economics backwards: purchasing power parity rests on arbitrage, which only pulls the
+prices of traded goods together, so a good that barely trades is the weaker candidate,
+and nontradables are where Balassa-Samuelson says prices drift with income. The
+paragraph after the figure now attributes the disagreements to the goods, and the evidence
+it gives against the nominal exchange rate is Italy against Germany: one currency, valued
+at −57% and −9%. It names measurement and local preferences as likely contributors and
+avoids presenting them as the only two. Julian asked for economics terms throughout
+(implied exchange rate, overvalued, undervalued) and no spatial phrasing such as "further
+below the dollar".
+
+Working, with bootstrap intervals, a GDP-adjusted version and the robustness checks, is
+in `Julian/analysis/cappuccino-ppp/` (which has its own README) one directory up from
+the site: `cappuccino_ppp.py` regenerates `cappuccino_ppp.csv`, `report.html` and the
+paste-ready `valuation.ts.txt`.
+The 34 pairs shipped to the page are `VALUATION` in `coffee-charts.ts`.
+
+| Series | Source | Licence |
+|---|---|---|
+| Cappuccino price in local currency, 36 countries | `Cappuccino Index 2026 (public).xlsx`, `full_data` tab | Hoffmann, public workbook — credit him |
+| Big Mac price, market rate, index | `TheEconomist/big-mac-data`, `source-data/big-mac-source-data-v2.csv` and `output-data/big-mac-full-index.csv`, 2026-07-01 | The Economist, GitHub repo |
+
+Method decisions, each of which moves numbers:
+
+- **Geometric mean, not median.** Prices pile up on round numbers, so medians are lumpy:
+  the American median is exactly $5.00 and the bootstrap intervals collapse onto their own
+  end points. A mean of logs fixes that and the two sets of valuations correlate at 0.997.
+- **Modal currency per country.** A handful of responses quote USD from outside the US.
+  Keeping only each country's own currency drops them.
+- **Outliers.** Log price more than 3 MADs from the country median, 88 of 2,594 responses.
+  The n≥10 cut is applied before this, so it stays Hoffmann's 36 countries.
+- **Exchange rates come from the workbook**, backed out as column H over column C, since
+  it stores cached GOOGLEFINANCE values and no rate column. The date is not recorded. They
+  sit within 0.5% of the Economist's July rates at the median, 4% at the worst (Chile),
+  and swapping in the Economist's rates moves valuations by about that much.
+- **Euro countries are reported separately**, using the Economist's source file, because
+  its published index carries only a single euro area. Recomputing its `USD_raw` from that
+  file reproduces the published figures to 5e-06, which is the check that the formula
+  matches theirs. Pooling all EUR responses instead gives a euro area at −12%, against the
+  Economist's +14%.
+- **PPP income, not market income, for anything involving GDP.** The page's other figure
+  already uses WDI `NY.GDP.PCAP.PP.KD`, and a dollar price regressed on a market-rate
+  income has the same exchange rate in both variables. The script reads the 36 GDP values
+  straight out of the `CAPPUCCINO` array in `coffee-charts.ts`, so the two figures cannot
+  drift apart. On PPP income the cappuccino's dollar-price elasticity is 0.34 (s.e. 0.06),
+  which reproduces the +0.35 in the table above, and the Big Mac's is 0.38 (s.e. 0.06).
+
+Things worth knowing before reading the figure:
+
+- **The level is anchored on the American price and the ranking is the safer half.** The
+  cappuccino averages −16% against the Big Mac's −1%, because an American cappuccino is
+  dear by international standards while an American Big Mac is not. A 10% higher American
+  base makes every other country about 9% more undervalued. If the section ever grows, a
+  sample-average numeraire is the defensible version of the level.
+- **Italy is the outlier of the whole exercise**, at −57% on coffee against +21% on the
+  burger. The €1.85 espresso-bar cappuccino is real, and so is its smaller cup.
+- **Sampling noise is not what drives the gaps.** The median 90% bootstrap interval, over
+  responses within each country and within the US base, is 8 points wide, and 94% of
+  countries have an interval excluding zero.
+- **The GDP-adjusted version was computed and not shipped.** Fitting the Economist's linear
+  adjustment to each good over the same countries leaves r at 0.50, against 0.69 raw. It is
+  in the CSV as `capp_adj` and `bm_adj_own` if it is ever wanted.
+- **Restricting to urban responses changes nothing** (r = 0.999 with the baseline), which
+  is worth knowing because the American sample leans suburban.
+- **Square data area.** The 45-degree line only means what the caption says if the x and y
+  ranges are equally long in pixels, hence the height computed from the width in
+  `valuationChart` rather than the 440 the other figures use.

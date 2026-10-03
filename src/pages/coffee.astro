@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Link from '../components/Link.astro';
 import Figure from '../components/Figure.astro';
-import { chainChart, cappuccinoChart } from '../lib/coffee-charts';
+import { chainChart, cappuccinoChart, valuationChart } from '../lib/coffee-charts';
 
 // A pointer page, deliberately short. The map itself lives at knowyourgrounds.com
 // and is where the work is; this page exists because the nav promises it, and a
@@ -186,14 +186,52 @@ const dashboard =
     </p>
 
     <p class="prose coffee__body">
-      The index is James Hoffmann&rsquo;s and all I have added is the second axis. He explains
-      how he built it, and what went wrong while he was building it, at rather more length
-      than this page does.
+      The index is James Hoffmann&rsquo;s, and the income axis is what I have added. He
+      explains how he built it, and what went wrong while he was building it, at rather more
+      length than this page does.
     </p>
 
     <p class="home__links">
       <Link href={video} class="home__link home__link--primary">Hoffmann on the index &rarr;</Link>
       <Link href={dashboard} class="home__link">The full data &rarr;</Link>
+    </p>
+
+    <h3 id="cappuccino-xr" class="coffee__subhead">A new coffee-based measure of exchange-rate valuation</h3>
+
+    <p class="prose coffee__body">
+      Because Hoffmann&rsquo;s survey records each price in local currency, the same cups can
+      also be used to value currencies. The Economist has done this with the Big Mac since 1986. Dividing a
+      country&rsquo;s Big Mac price in local currency by the American price in dollars gives an
+      implied exchange rate, and comparing that with the market rate says whether the currency
+      is overvalued or undervalued against the dollar. I ran the same computation using the
+      cappuccino prices in the survey, which gives a new measure I call the Cappuccino
+      Exchange Rate Index. It broadly agrees with the Big Mac index: across the 34 countries in both, the
+      correlation is 0.69, and in seven countries out of ten the two agree on whether the
+      currency is overvalued or undervalued.
+    </p>
+
+    <Figure
+      svg={valuationChart()}
+      caption="Over- and undervaluation against the US dollar, in per cent, implied by the price of a cappuccino (the Cappuccino XR index) and by the price of a Big Mac (the Big Mac index). Each point is one of the 34 countries in both indices; a country on the dashed line is valued the same way by the two. The United States is omitted, since it is zero on both by construction."
+      source="Sources: cappuccino prices from James Hoffmann’s Cappuccino Index 2026, the same survey as above, in local currency and restricted to the 36 countries answered at least ten times; Big Mac prices and market exchange rates from The Economist’s Big Mac index, July 2026, github.com/TheEconomist/big-mac-data. Implied rates, and Big Mac valuations for individual euro-area countries, are the author’s calculation."
+    />
+
+    <p class="prose coffee__body">
+      Arguably, the disagreements between the two indices are driven by the goods underlying
+      them. The nominal exchange rate cannot explain these disagreements, since the euro trades
+      at one rate in Rome and in Berlin, and yet the Cappuccino Exchange Rate Index has it 57
+      per cent undervalued against the dollar in Italy and 9 per cent undervalued in Germany. Some of
+      the gap between the indices is likely measurement, because the cappuccino price is an
+      average over a crowdsourced survey of caf&eacute;s while the Big Mac price is a single
+      item on a standard menu. Local preferences over the goods themselves are probably part of
+      it too. In the United States a cappuccino is closer to a luxury good, whereas in Italy it
+      is part of daily life for far more people, drunk standing at an espresso bar, in a
+      smaller cup and at a price that custom keeps low (&euro;1.85 in the survey). Because
+      every implied exchange rate is computed relative to the American price, the first of
+      these helps explain why cappuccino prices imply that most currencies are more undervalued
+      against the dollar than Big Mac prices do, with an average undervaluation of 16 per cent
+      against 1 per cent. The second helps explain Italy, where the euro is 57 per cent
+      undervalued on cappuccino prices and 21 per cent overvalued on Big Mac prices.
     </p>
   </section>
 </Base>

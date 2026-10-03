@@ -36,7 +36,8 @@ figure to the wrong paper is worse than having none.
 A better home for a chart, if one is wanted, is the Coffee page, where a figure is the point
 rather than an addition.
 
-**That is what happened.** The Coffee page now carries one — the coffee supply chain
-split by stage — rendered to SVG at build time rather than shipped as an image. See
-`docs/coffee-figures.md` for it, for the three candidates that were cut, and for the
-data sources behind all four.
+**That is what happened.** The Coffee page now carries three, all rendered to SVG at
+build time rather than shipped as images: the coffee supply chain split by stage, the
+cappuccino index against income, and the cappuccino read as an exchange-rate index
+against the Big Mac. See `docs/coffee-figures.md` for them, for the three candidates
+that were cut, and for the data sources behind all of it.
