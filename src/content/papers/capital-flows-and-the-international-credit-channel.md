@@ -16,5 +16,5 @@ topics:
   - "banking-credit"
 abstract: "We examine the role of the international credit channel in Turkey over 2005–2013. We show that larger, more capitalized banks with higher non-core liabilities increase credit supply when capital inflows are higher. This result is stronger for domestic banks relative to foreign banks and survives during the crisis period of post-2008, when foreign banks in general stop lending in emerging markets and retreat to their home countries. By decomposing capital inflows into bank and non-bank flows, we show the importance of domestic banks' external borrowing for domestic credit growth. © 2017 Elsevier B.V. All rights reserved."
 featured: false
-coauthorUrls: {"Şebnem Kalemli-Özcan": "http://econweb.umd.edu/~kalemli/", "José-Luis Peydró": "https://sites.google.com/site/joseluispeydroswebpage/", "Mehmet F. Ulu": "https://sites.google.com/site/mehmetfatihulu/"}
+coauthorUrls: {"Şebnem Kalemli-Özcan": "https://www.sebnemkalemliozcan.com/", "José-Luis Peydró": "https://sites.google.com/site/joseluispeydroswebpage/", "Mehmet F. Ulu": "https://sites.google.com/site/mehmetfatihulu/"}
 ---

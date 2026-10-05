@@ -17,5 +17,5 @@ abstract: "This paper evaluates the global welfare impact of observed levels of 
 featured: false
 press: [{"label": "New York Times", "url": "http://www.nytimes.com/2015/09/16/business/international/europe-must-plan-for-immigration-juggernaut.html"}]
 dataCode: [{"label": "Replication package", "url": "https://onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fjeea.12110&file=jeea12110-sup-0002-REPLICATION.zip"}]
-coauthorUrls: {"Andrei A. Levchenko": "http://alevchenko.com/", "Francesc Ortega": "http://qcpages.qc.cuny.edu/~fortega/"}
+coauthorUrls: {"Andrei A. Levchenko": "http://alevchenko.com/", "Francesc Ortega": "https://www.qc.cuny.edu/communications/faculty-profile-francesc-ortega/"}
 ---

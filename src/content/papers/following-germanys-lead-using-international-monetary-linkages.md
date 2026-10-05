@@ -14,5 +14,5 @@ topics:
   - "monetary-policy"
 abstract: "We present instrumental variables estimates of the impact of interest rates on quarterly real output for several European countries, using German interest rates as the instrument. These estimates confirm a strong forward-looking bias in least squares estimates that persists even conditional on standard controls for the history of the system. Due to the potential for correlation of output shocks across countries, we interpret our estimates as lower bounds for the effect of monetary policy on real output."
 featured: false
-coauthorUrls: {"Justin McCrary": "http://www.econ.berkeley.edu/%7Ejmccrary/", "Till von Wachter": "http://www.econ.ucla.edu/tvwachter/"}
+coauthorUrls: {"Justin McCrary": "https://www.law.columbia.edu/faculty/justin-mccrary", "Till von Wachter": "http://www.econ.ucla.edu/tvwachter/"}
 ---

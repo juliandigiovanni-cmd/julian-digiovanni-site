@@ -14,5 +14,5 @@ topics:
   - "trade"
 abstract: "This paper examines the impact of trade costs on real exchange rate volatility. The relationship is examined by constructing a two-country Ricardian model of trade, based on the work of Dornbusch, Fischer, and Samuelson (1977), which shows that higher trade costs result in a larger nontradables sector, in turn leading to higher real exchange rate volatility. We then construct a remoteness index to proxy for trade costs, and provide empirical evidence supporting the channel."
 featured: false
-coauthorUrls: {"Claudio Bravo-Ortega": "http://www.econ.uchile.cl/ficha/clbravo"}
+coauthorUrls: {"Claudio Bravo-Ortega": "https://www.cbravoortega.site/"}
 ---
