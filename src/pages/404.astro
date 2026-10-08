@@ -10,9 +10,9 @@ import Link from '../components/Link.astro';
 // Without it the host falls back to its own "Not Found", which has no way back
 // to the site.
 //
-// It also carries the redirects. Pages ignores .htaccess, so the two rules in
+// It also carries the redirects. Pages ignores .htaccess, so the rules in
 // deploy/htaccess are repeated in the script below, which forwards a matching
-// path with location.replace. A third rule covers the replication archives,
+// path with location.replace. One more rule covers the replication archives,
 // which Apache served as plain files from /Papers/. This is the one page on the
 // site that ships any JavaScript, and it is is:inline so Astro leaves it as
 // written: a few lines, no bundle. A visitor with JavaScript off, or a crawler, gets the 404 and the
@@ -44,6 +44,13 @@ import Link from '../components/Link.astro';
       // published proceedings version. The old site linked the working paper.
       else if (path === '/Papers/DGKOS_InflationSupplyChainTrade.pdf')
         to = '/Papers/DGKOS_InflationSupplyChainTrade_SintraFinal.pdf';
+      // Two more deleted versions that Google still crawled after the cutover (Search
+      // Console, 2026-10): a working paper and a superseded draft, each sent to the
+      // version that survives.
+      else if (path === '/Papers/BdGKOPU_CapitalFlowsCreditChannel.pdf')
+        to = '/Papers/BdGKOPU_JIE17.pdf';
+      else if (path === '/Papers/DNdiGDo_climate_inflation v2.pdf')
+        to = '/Papers/DNdiGDo_climate_inflation.pdf';
       // The replication archives lived in /Papers/ on Bluehost, and journals' replication
       // pages still point there. They are too big for the repo (one is 195 MB), so they
       // are assets on the replication-files release. Only the nine that existed are

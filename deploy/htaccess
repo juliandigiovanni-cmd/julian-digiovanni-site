@@ -1,5 +1,5 @@
 # BLUEHOST ONLY. The site now deploys to GitHub Pages through
-# .github/workflows/deploy.yml, and Pages ignores .htaccess entirely: the two
+# .github/workflows/deploy.yml, and Pages ignores .htaccess entirely: the
 # redirects below are repeated in src/pages/404.astro, and HTTPS is the repo's
 # "Enforce HTTPS" setting. Kept for as long as Bluehost still serves the site,
 # and as the record of the rules. Change a redirect in both places until then.
@@ -33,3 +33,7 @@ RedirectMatch 301 ^/policy-blogs/?$ /policy-writing/
 # in favour of the published proceedings version. The old site linked the
 # working paper, so send that URL to the one that survives rather than 404.
 Redirect 301 /Papers/DGKOS_InflationSupplyChainTrade.pdf /Papers/DGKOS_InflationSupplyChainTrade_SintraFinal.pdf
+
+# Two more deleted versions Google still crawled after the cutover (2026-10).
+Redirect 301 /Papers/BdGKOPU_CapitalFlowsCreditChannel.pdf /Papers/BdGKOPU_JIE17.pdf
+Redirect 301 "/Papers/DNdiGDo_climate_inflation v2.pdf" /Papers/DNdiGDo_climate_inflation.pdf
