@@ -106,6 +106,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
 }
 .nav a:hover, .nav a[aria-current="page"] { color: var(--ink-strong); }
 .nav a[aria-current="page"] { font-weight: 600; }
+/* A long nav label has a short form for phones, so the nav keeps to one row
+   under the name and the sticky masthead stays two rows tall. */
+.nav__short { display: none; }
+@media (max-width: 34rem) {
+  .nav { gap: var(--space-sm) 1.1rem; }
+  .nav__long { display: none; }
+  .nav__short { display: inline; }
+}
 
 /* --- sections ---------------------------------------------------------- */
 
@@ -473,6 +481,14 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
    instead -- the same trade the site makes for wide tables via .scroll-x. */
 .figure__plot { overflow-x: auto; }
 .figure__plot svg { min-width: 600px; height: auto; }
+/* A figure with a compact layout swaps to it on a phone instead of scrolling;
+   the 600px floor above remains only for figures that have no compact one. */
+.figure__compact { display: none; }
+.figure__compact svg { min-width: 0; width: 100%; }
+@media (max-width: 34rem) {
+  .figure__wide { display: none; }
+  .figure__compact { display: block; }
+}
 /* Notes and sources fold away under each chart, styled like the Research
    page's abstract toggle, so the text can be readable once opened. */
 .figure figcaption { margin-top: var(--space-xs); }

@@ -11,14 +11,23 @@
  */
 interface Props {
   svg: string;
+  /** A phone-width layout of the same chart, shown below 34rem instead of `svg`. */
+  svgCompact?: string;
   caption: string;
   source: string;
 }
-const { svg, caption, source } = Astro.props;
+const { svg, svgCompact, caption, source } = Astro.props;
 ---
 
 <figure class="figure">
-  <div class="figure__plot" set:html={svg} />
+  {svgCompact ? (
+    <div class="figure__plot">
+      <div class="figure__wide" set:html={svg} />
+      <div class="figure__compact" set:html={svgCompact} />
+    </div>
+  ) : (
+    <div class="figure__plot" set:html={svg} />
+  )}
   <figcaption>
     <details class="figure__notes">
       <summary>Notes and sources</summary>

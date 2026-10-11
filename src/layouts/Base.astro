@@ -41,7 +41,14 @@ const year = new Date().getFullYear();
             const href = item.url.replace(/\/+$/, '') || '/';
             return (
               <a href={item.url} aria-current={href === path ? 'page' : undefined}>
-                {item.label}
+                {'short' in item && item.short ? (
+                  <>
+                    <span class="nav__long">{item.label}</span>
+                    <span class="nav__short">{item.short}</span>
+                  </>
+                ) : (
+                  item.label
+                )}
               </a>
             );
           })}

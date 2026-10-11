@@ -115,6 +115,14 @@ faith against the one piece of evidence in front of them. Supporting it properly
 second figure plotting price and wage against income separately, and a section that
 exists for fun does not carry two figures.
 
+Each chart also has a **compact version** for phones (`{ compact: true }` in
+`coffee-charts.ts`, passed to `Figure.astro` as `svgCompact` and swapped in by CSS below
+34rem). It is drawn at 360 wide with thinned ticks, and labels only the countries the prose
+names, using its own placement maps (`PLACEMENT_COMPACT`, `VAL_PLACEMENT_COMPACT`). If
+the prose names a new country or the data move, check the placements at 390px. On the
+compact cappuccino chart the y-axis numbers are drawn as a text mark, because Plot thins the
+log labels at that height and drops the 90.
+
 Each figure's caption and source line sit behind a collapsed "Notes and sources"
 disclosure (`Figure.astro`), so they can be set at a readable size; the licence credits
 remain in the page.

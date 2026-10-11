@@ -10,7 +10,8 @@ export const site = {
     { url: '/', label: 'Home' },
     { url: '/research/', label: 'Research' },
     { url: '/policy-writing/', label: 'Policy Writing' },
-    { url: '/coffee/', label: 'Coffee & Economics' },
+    // `short` replaces the label below 34rem so the nav fits one row on a phone.
+    { url: '/coffee/', label: 'Coffee & Economics', short: 'Coffee' },
     { url: '/cv/', label: 'CV' },
   ],
 

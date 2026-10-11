@@ -89,6 +89,7 @@ const dashboard =
 
     <Figure
       svg={chainChart()}
+      svgCompact={chainChart({ compact: true })}
       caption="Euros per kilogram of German national-brand ground coffee, 2021, shown as shares of the price before tax. Taxes are taken out because a flat German excise of €2.19 a kilogram is a fact about Germany rather than about coffee: the same levy is 31% of a private-label ground pack and 6% of a capsule. One origin-to-Germany chain for one product, not a world average."
       source="Source: BASIC et al. (2024), The Grounds for Sharing, commissioned by the Global Coffee Platform, IDH and Solidaridad, as reproduced in Coffee Barometer 2026, Figure 7, p.59. Division of the pre-tax price is the author’s calculation from their published euro figures."
     />
@@ -210,6 +211,7 @@ const dashboard =
 
     <Figure
       svg={cappuccinoChart()}
+      svgCompact={cappuccinoChart({ compact: true })}
       caption="Minutes of barista work needed to buy one small cappuccino, against real GDP per capita, 2024. Each point is a country. The dashed line is an ordinary least squares fit through all 36 points in logs, with a slope of −1.02 and an R² of 0.69."
       source="Sources: index from James Hoffmann’s Cappuccino Index 2026, a crowdsourced survey of 2,594 reported pairs of barista hourly wage and cappuccino price, restricted here to the 36 countries answered at least ten times. GDP per capita from World Bank World Development Indicators, series NY.GDP.PCAP.PP.KD, PPP in constant 2021 international dollars (CC BY 4.0). The fitted line is the author’s calculation."
     />
@@ -255,6 +257,7 @@ const dashboard =
 
     <Figure
       svg={valuationChart()}
+      svgCompact={valuationChart({ compact: true })}
       caption="Over- and undervaluation against the US dollar, in per cent, implied by the price of a cappuccino (the Cappuccino XR index) and by the price of a Big Mac (the Big Mac index). Each point is one of the 34 countries in both indices; a country on the dashed line is valued the same way by the two. The United States is omitted, since it is zero on both by construction."
       source="Sources: cappuccino prices from James Hoffmann’s Cappuccino Index 2026, the same survey as above, in local currency and restricted to the 36 countries answered at least ten times; Big Mac prices and market exchange rates from The Economist’s Big Mac index, July 2026, github.com/TheEconomist/big-mac-data. Implied rates, and Big Mac valuations for individual euro-area countries, are the author’s calculation."
     />

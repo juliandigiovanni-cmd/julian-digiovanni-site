@@ -2,6 +2,15 @@ import * as Plot from '@observablehq/plot';
 import { renderPlot, INK, INK_MUTED, RULE, ACCENT, NEUTRAL, CHAIN } from './chart';
 
 const WIDTH = 680;
+/**
+ * Every figure also comes in a compact version, laid out natively at phone width
+ * and swapped in by CSS below 34rem (see Figure.astro). Shrinking the 680 layout
+ * to a 350px screen would take the 12px labels down to about 6px, so the compact
+ * one is drawn at 360 with fewer ticks and fewer labels -- only the countries the
+ * prose names. Its placements are tuned separately; check them at 360px.
+ */
+const COMPACT = 360;
+type Opts = { compact?: boolean };
 
 /**
  * Where the money goes in a kilogram of coffee.
@@ -39,7 +48,7 @@ const STAGES = [
   { stage: 'Retail', part: '', eur: 1.71 },
 ];
 
-export function chainChart() {
+export function chainChart({ compact = false }: Opts = {}) {
   const order = ['The farmer', 'Export', 'Trade and shipping', 'Roasting', 'Retail'];
   const colour = Object.fromEntries(order.map((s, i) => [s, CHAIN[i]]));
 
@@ -60,20 +69,24 @@ export function chainChart() {
 
   return renderPlot(
     {
-      width: WIDTH,
-      height: 300,
-      marginLeft: 132,
-      marginRight: 56,
+      width: compact ? COMPACT : WIDTH,
+      height: compact ? 260 : 300,
+      marginLeft: compact ? 112 : 132,
+      marginRight: compact ? 36 : 56,
       marginTop: 8,
       marginBottom: 40,
       x: {
         domain: [0, 40],
-        label: '% of what a kilogram costs before tax',
+        ticks: compact ? [0, 10, 20, 30, 40] : undefined,
+        label: compact ? '% of pre-tax price' : '% of what a kilogram costs before tax',
         labelAnchor: 'left',
         grid: true,
         tickFormat: (d: number) => String(d),
       },
-      y: { domain: order, label: null },
+      y: {
+        domain: order, label: null,
+        tickFormat: (d: string) => (compact && d === 'Trade and shipping' ? 'Shipping' : d),
+      },
       style: { fontSize: '12px' },
       marks: [
         Plot.ruleX([0], { stroke: RULE }),
@@ -94,9 +107,11 @@ export function chainChart() {
         // The farmer's two parts, named inside their own segments -- below the
         // bar they crowded the row beneath. White on the dark cost segment,
         // ink on the lighter income one.
-        Plot.text(bars.filter((d) => d.part), {
+        // Compact: the income segment is too narrow for any words, so only the
+        // cost segment is named, shortly; the caption carries the split.
+        Plot.text(bars.filter((d) => (compact ? d.part === 'what growing it costs' : d.part)), {
           x: (d: any) => (d.x1 + d.x2) / 2, y: 'stage',
-          text: (d: any) => d.part,
+          text: (d: any) => (compact ? 'cost' : d.part),
           fontSize: 11, textAnchor: 'middle',
           fill: (d: any) => (d.part === 'left as income' ? INK : '#ffffff'),
         }),
@@ -208,7 +223,21 @@ const PLACEMENT: Record<string, Placement> = {
 
 const MINUTE_TICKS = [10, 15, 20, 30, 45, 60, 90, 120, 180];
 
-export function cappuccinoChart() {
+// Compact labels: the six countries the prose names either side of the line,
+// plus India, which it cites for the three hours.
+const PLACEMENT_COMPACT: Record<string, Placement> = {
+  India: { anchor: 'start', dx: 7, dy: 0 },
+  Turkey: { anchor: 'start', dx: 7, dy: -4 },
+  Malaysia: { anchor: 'start', dx: 7, dy: 9 },
+  Singapore: { anchor: 'end', dx: -7, dy: 0 },
+  Australia: { anchor: 'start', dx: 7, dy: 2 },
+  Italy: { anchor: 'end', dx: -7, dy: 6 },
+  'New Zealand': { anchor: 'end', dx: -7, dy: -2 },
+};
+
+export function cappuccinoChart({ compact = false }: Opts = {}) {
+  const placement = compact ? PLACEMENT_COMPACT : PLACEMENT;
+  const minuteTicks = compact ? [10, 20, 45, 90, 180] : MINUTE_TICKS;
   // OLS in logs. Plot.linearRegressionY would fit in data space, which is the
   // wrong space here: both scales are logarithmic, so the line that belongs on
   // this figure is the one that is straight in logs.
@@ -233,7 +262,7 @@ export function cappuccinoChart() {
   // One mark per distinct offset, see the note on PLACEMENT above.
   const groups = new Map<string, { place: Placement; rows: typeof CAPPUCCINO }>();
   for (const d of CAPPUCCINO) {
-    const place = PLACEMENT[d.country];
+    const place = placement[d.country];
     if (!place) continue;
     const key = `${place.anchor}|${place.dx}|${place.dy}`;
     if (!groups.has(key)) groups.set(key, { place, rows: [] });
@@ -242,10 +271,10 @@ export function cappuccinoChart() {
 
   return renderPlot(
     {
-      width: WIDTH,
-      height: 440,
-      marginLeft: 54,
-      marginRight: 24,
+      width: compact ? COMPACT : WIDTH,
+      height: compact ? 380 : 440,
+      marginLeft: compact ? 40 : 54,
+      marginRight: compact ? 12 : 24,
       marginTop: 10,
       marginBottom: 46,
       // Padded past the data on both axes so that Singapore and Ireland at the
@@ -253,7 +282,7 @@ export function cappuccinoChart() {
       x: {
         type: 'log',
         domain: [8400, 155000],
-        label: 'Real GDP per capita, PPP (constant 2021 $, log scale)',
+        label: compact ? 'GDP per capita, PPP (log scale)' : 'Real GDP per capita, PPP (constant 2021 $, log scale)',
         labelAnchor: 'left',
         ticks: [10000, 20000, 50000, 100000],
         tickFormat: (d: number) => `$${d / 1000}k`,
@@ -266,19 +295,27 @@ export function cappuccinoChart() {
       y: { type: 'log', domain: [9, 200], axis: null },
       style: { fontSize: '12px' },
       marks: [
-        Plot.gridY(MINUTE_TICKS, { stroke: RULE }),
-        Plot.axisY(MINUTE_TICKS, {
-          tickFormat: (d: number) => String(d),
-          label: 'Minutes of barista work per cappuccino',
+        Plot.gridY(minuteTicks, { stroke: RULE }),
+        Plot.axisY(minuteTicks, {
+          // At compact height Plot thins the log labels again even through an
+          // explicit axis, and drops the 90; there the numbers are drawn below.
+          tickFormat: compact ? () => '' : (d: number) => String(d),
+          label: compact ? 'Minutes of barista work' : 'Minutes of barista work per cappuccino',
           labelAnchor: 'top',
         }),
+        ...(compact
+          ? [Plot.text(minuteTicks, {
+              y: (d: number) => d, text: (d: number) => String(d),
+              frameAnchor: 'left', textAnchor: 'end', dx: -9, fill: INK_MUTED,
+            })]
+          : []),
         Plot.line(fit, {
           x: 'gdp', y: 'min',
           stroke: NEUTRAL, strokeWidth: 1.5, strokeDasharray: '4,3',
         }),
         Plot.dot(CAPPUCCINO, {
           x: 'gdp', y: 'min',
-          r: 4, fill: ACCENT, fillOpacity: 0.85,
+          r: compact ? 3.5 : 4, fill: ACCENT, fillOpacity: 0.85,
         }),
         ...[...groups.values()].map(({ place, rows }) =>
           Plot.text(rows, {
@@ -376,7 +413,17 @@ const VAL_PLACEMENT: Record<string, Placement> = {
   Argentina: { anchor: 'end', dx: -8, dy: 0 },
 };
 
-export function valuationChart() {
+// Compact labels: the pair the prose sets against each other, and the two
+// corners that sit on the line.
+const VAL_PLACEMENT_COMPACT: Record<string, Placement> = {
+  Italy: { anchor: 'end', dx: -7, dy: 4 },
+  Germany: { anchor: 'start', dx: 7, dy: 0 },
+  Switzerland: { anchor: 'end', dx: -7, dy: 0 },
+  India: { anchor: 'start', dx: 7, dy: 0 },
+};
+
+export function valuationChart({ compact = false }: Opts = {}) {
+  const valPlacement = compact ? VAL_PLACEMENT_COMPACT : VAL_PLACEMENT;
   // Pearson r, computed here so the caption cannot drift from the data above.
   const n = VALUATION.length;
   const mx = VALUATION.reduce((a, d) => a + d.bigmac, 0) / n;
@@ -388,7 +435,7 @@ export function valuationChart() {
 
   const groups = new Map<string, { place: Placement; rows: typeof VALUATION }>();
   for (const d of VALUATION) {
-    const place = VAL_PLACEMENT[d.country];
+    const place = valPlacement[d.country];
     if (!place) continue;
     const key = `${place.anchor}|${place.dx}|${place.dy}`;
     if (!groups.has(key)) groups.set(key, { place, rows: [] });
@@ -398,22 +445,26 @@ export function valuationChart() {
   // One domain on both axes, or the 45-degree line would not be at 45 degrees and
   // a point's distance from it would stop meaning what the caption says it means.
   const DOMAIN: [number, number] = [-66, 52];
-  const TICKS = [-60, -40, -20, 0, 20, 40];
+  const TICKS = compact ? [-60, -30, 0, 30] : [-60, -40, -20, 0, 20, 40];
 
   // The data area must be square for the 45-degree line to be drawn at 45 degrees.
   // A square the full 680 wide would make this figure half as tall again as the
   // cappuccino one above it, so the frame keeps the shared width (and with it the
   // type size) at a height near the others, and the square is centred inside it.
-  const HEIGHT = 480;
+  // Compact: the full 360 is the square, with no centring pad.
+  const W = compact ? COMPACT : WIDTH;
+  const ML = compact ? 46 : 58;
+  const MR = compact ? 10 : 24;
+  const HEIGHT = compact ? COMPACT - ML - MR + 10 + 46 : 480;
   const side = HEIGHT - 10 - 46;
-  const pad = (WIDTH - side - 58 - 24) / 2;
+  const pad = (W - side - ML - MR) / 2;
 
   return renderPlot(
     {
-      width: WIDTH,
+      width: W,
       height: HEIGHT,
-      marginLeft: 58 + pad,
-      marginRight: 24 + pad,
+      marginLeft: ML + pad,
+      marginRight: MR + pad,
       marginTop: 10,
       marginBottom: 46,
       x: {
@@ -445,7 +496,7 @@ export function valuationChart() {
         Plot.ruleY([0], { stroke: RULE }),
         Plot.dot(VALUATION, {
           x: 'bigmac', y: 'capp',
-          r: 4, fill: ACCENT, fillOpacity: 0.85,
+          r: compact ? 3.5 : 4, fill: ACCENT, fillOpacity: 0.85,
         }),
         ...[...groups.values()].map(({ place, rows }) =>
           Plot.text(rows, {
