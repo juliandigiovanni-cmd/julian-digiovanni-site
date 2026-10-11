@@ -115,6 +115,17 @@ faith against the one piece of evidence in front of them. Supporting it properly
 second figure plotting price and wage against income separately, and a section that
 exists for fun does not carry two figures.
 
+Each figure's caption and source line sit behind a collapsed "Notes and sources"
+disclosure (`Figure.astro`), so they can be set at a readable size; the licence credits
+remain in the page.
+
+**Update, 11 October 2026: Balassa-Samuelson is back on the page**, at Julian's request to
+tie the index to textbook international macro. It answers the objection above in prose rather
+than with a second figure: the paragraph after the first chart splits the index into price
+(+0.35) and wage (+1.36) and explains the downward slope as wages outrunning prices. The
+section now opens by naming Hoffmann as the index's creator and setting up the two textbook
+facts (Balassa-Samuelson, failure of PPP) that the two figures take in turn.
+
 The check was run before the paragraph was cut, and the numbers are kept here so nobody
 redoes them. The index is a ratio, so its slope decomposes exactly as
 beta_index = beta_price - beta_wage. On log GDP per capita, PPP, 2024, n=36:

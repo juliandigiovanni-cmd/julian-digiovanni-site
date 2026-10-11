@@ -100,6 +100,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
 .nav a {
   color: var(--ink-muted); text-decoration: none;
   font-size: var(--size-small);
+  white-space: nowrap; /* "Coffee & Economics" wraps as one item */
   /* 44px tap target without visually enlarging the link */
   padding-block: 0.6rem;
 }
@@ -472,16 +473,23 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: var(--space-lg) 0; }
    instead -- the same trade the site makes for wide tables via .scroll-x. */
 .figure__plot { overflow-x: auto; }
 .figure__plot svg { min-width: 600px; height: auto; }
-.figure figcaption {
-  font-size: var(--size-tiny);
+/* Notes and sources fold away under each chart, styled like the Research
+   page's abstract toggle, so the text can be readable once opened. */
+.figure figcaption { margin-top: var(--space-xs); }
+.figure__notes summary {
+  cursor: pointer; font-size: var(--size-meta);
+  color: var(--accent); width: fit-content; padding-block: 0.35rem;
+}
+.figure__notes p {
+  font-size: var(--size-small);
   color: var(--ink-muted);
-  line-height: 1.5;
-  margin-top: var(--space-sm);
+  line-height: 1.55;
+  margin-top: var(--space-xs);
   text-align: justify;
   hyphens: auto;
   -webkit-hyphens: auto;
 }
-.figure__src { display: block; color: var(--ink-faint); }
+.figure__notes .figure__src { font-size: var(--size-meta); }
 
 /* The stage list under the chain figure. Each stage is a native <details>, the
    same disclosure the Research page uses for abstracts, so the default view is

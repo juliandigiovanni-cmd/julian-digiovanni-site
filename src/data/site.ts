@@ -10,7 +10,7 @@ export const site = {
     { url: '/', label: 'Home' },
     { url: '/research/', label: 'Research' },
     { url: '/policy-writing/', label: 'Policy Writing' },
-    { url: '/coffee/', label: 'Coffee' },
+    { url: '/coffee/', label: 'Coffee & Economics' },
     { url: '/cv/', label: 'CV' },
   ],
 

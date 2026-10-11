@@ -144,7 +144,9 @@ the CEPR book chapter.
 
 ## The Coffee page
 
-`/coffee/` carries three parts: Know your Grounds, the specialty coffee map Julian built;
+`/coffee/` is titled **Coffee & Economics** (page heading and nav label, since 11 October
+2026; the URL is unchanged). Its intro ties coffee to Julian's fields — supply chains and
+climate, supply shocks, international trade and international macro — and the page carries three parts: Know your Grounds, the specialty coffee map Julian built;
 a section on the coffee supply chain — where the money in a kilogram goes, and what
 climate and other disruption do to each stage of the chain; and the cappuccino index,
 which now runs two figures, one on barista minutes against income and one on what the

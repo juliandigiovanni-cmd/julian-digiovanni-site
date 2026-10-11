@@ -4,33 +4,48 @@ import Link from '../components/Link.astro';
 import Figure from '../components/Figure.astro';
 import { chainChart, cappuccinoChart, valuationChart } from '../lib/coffee-charts';
 
-// A pointer page, deliberately short. The map itself lives at knowyourgrounds.com
-// and is where the work is; this page exists because the nav promises it, and a
-// reader who lands here should know what the link is before following it.
+// Coffee & Economics. Three parts: Know your Grounds (the map itself lives at
+// knowyourgrounds.com), the coffee supply chain and where climate hits it, and
+// James Hoffmann's cappuccino index read against two textbook facts of
+// international macro -- Balassa-Samuelson and the failure of purchasing power
+// parity. The intro ties coffee to Julian's research fields; keep that framing.
 //
 // Two things to leave alone. No café or city counts: the live site carries them
 // and they move, so a hand-maintained second copy goes stale without anyone
 // noticing. And nothing here should imply the map follows Julian's travels --
 // most of the cities on it are places he has never been.
 const url = 'https://www.knowyourgrounds.com';
+const hoffmann = 'https://www.jameshoffmann.co.uk/';
 const video = 'https://www.youtube.com/watch?v=WtlE3BW9Nqs';
 const dashboard =
   'https://datastudio.google.com/u/0/reporting/b3354e23-eaff-4bd6-a776-24736dddf4c3/page/DqZ5F';
 ---
 
 <Base
-  title="Coffee"
-  description="Know your Grounds, a world coffee map for travellers — independent specialty cafés, scored on a published method."
+  title="Coffee & Economics"
+  description="Coffee and the economics behind it: Know your Grounds, a world map of specialty cafés; the coffee supply chain and where climate hits it; and the cappuccino index read against textbook international macroeconomics."
 >
-  <h1 class="page-title">Coffee</h1>
+  <h1 class="page-title">Coffee &amp; Economics</h1>
+
+  <p class="prose coffee__body" style="color: var(--ink-muted)">
+    I enjoy trying new coffee and caf&eacute;s, and looking for a good one has become part
+    of how I travel. That habit turned into <Link href={url}>Know your Grounds</Link>, a map of specialty
+    caf&eacute;s around the world that I built and keep adding to.
+  </p>
 
   <p class="prose coffee__body" style="color: var(--ink-muted); margin-bottom: var(--space-md)">
-    I enjoy trying new coffee and cafés. Exploring coffee also maps into my love of
-    travel and my research on globalization and international supply chains. This page
-    highlights some of this with a specialty coffee map I built, a short account of the
-    supply chain behind a cup, how climate change will impact the cost of this cup, and a
-    small index, for fun, of how many minutes of work it takes to buy the cappuccino you
-    just ordered &mdash; remember this number the next time you tip your local barista.
+    Coffee also runs through the parts of economics I <a href="/research/">work on</a>.
+    It is grown in a small number of tropical countries and drunk mostly in rich ones, so
+    every cup depends on a long international supply chain, and climate change puts that
+    chain under strain at the farm, at the port and on the shipping routes. A frost in
+    Brazil or a drought at the Panama Canal feeds through to the world price, which makes
+    coffee a clean example of a supply shock moving along a chain of international trade.
+    And the price of the finished cup differs across countries in ways that line up with
+    standard facts in international macroeconomics about prices, wages and exchange rates.
+    The page takes these in turn: where the money in a cup goes and where climate hits the
+    chain, and then a small index of how many minutes of work it takes to buy the
+    cappuccino you just ordered &mdash; remember this number the next time you tip your
+    local barista.
   </p>
 
   <nav class="section-nav" aria-label="Sections">
@@ -162,13 +177,36 @@ const dashboard =
     </header>
 
     <p class="prose coffee__body">
-      A cappuccino costs a barista in Australia about ten minutes of their own working time,
-      and a barista in India a little under three hours. That ratio is the cappuccino index: a
-      local price divided by the local wage of the person who made it. Since both sides are in the same currency, the exchange rate cancels and none of the
-      comparison depends on how a currency is valued. What is left is a price measured in working time, which is a real
-      wage upside down &mdash; the lower the number, the more coffee an hour behind the machine
-      buys.
+      The cappuccino index was created by <Link href={hoffmann}>James Hoffmann</Link>, a
+      former World Barista Champion, author and authority on all things coffee. He built it
+      from a crowdsourced survey in which baristas report their hourly wage and the price of a small cappuccino where they work.
+      The index is the local price divided by the local wage of the person who made the
+      drink. Since both sides are in the same currency, the exchange rate cancels and none of
+      the comparison depends on how a currency is valued. What is left is a price measured in
+      working time, which is a real wage upside down &mdash; the lower the number, the more
+      coffee an hour behind the machine buys. A cappuccino costs a barista in Australia about
+      ten minutes of their own working time, and a barista in India a little under three
+      hours.
     </p>
+
+    <p class="prose coffee__body">
+      Because the survey records prices and wages in local currency, the same cups can be set
+      against two standard textbook facts in international macroeconomics. The first is that
+      the prices of goods and services that do not trade across borders tend to rise with a
+      country&rsquo;s income, which is the Balassa&ndash;Samuelson effect. The second is that
+      purchasing power parity holds poorly, so that the same good can cost very different
+      amounts once prices are converted at market exchange rates, which the
+      Economist&rsquo;s Big Mac index has shown for decades. Hoffmann explains how he built
+      the index, and what went wrong while he was building it, at rather more length than this
+      page does.
+    </p>
+
+    <p class="home__links">
+      <Link href={video} class="home__link home__link--primary">Hoffmann on the index &rarr;</Link>
+      <Link href={dashboard} class="home__link">The full data &rarr;</Link>
+    </p>
+
+    <h3 id="cappuccino-income" class="coffee__subhead">Barista time and income</h3>
 
     <Figure
       svg={cappuccinoChart()}
@@ -186,21 +224,26 @@ const dashboard =
     </p>
 
     <p class="prose coffee__body">
-      The index is James Hoffmann&rsquo;s, and the income axis is what I have added. He
-      explains how he built it, and what went wrong while he was building it, at rather more
-      length than this page does.
-    </p>
-
-    <p class="home__links">
-      <Link href={video} class="home__link home__link--primary">Hoffmann on the index &rarr;</Link>
-      <Link href={dashboard} class="home__link">The full data &rarr;</Link>
+      The downward slope might look like it contradicts Balassa&ndash;Samuelson, but it is
+      consistent with it once the index is split into its two halves. A cappuccino is close
+      to a pure nontradable, since even at the top of the 2024&ndash;25 run the green coffee
+      in a $5 drink was worth under 4 per cent of its price, and what the customer pays for is
+      mostly local labour, rent and milk. As the textbook predicts, its price rises with
+      income: across the same 36 countries, a 10 per cent higher income per head goes with a
+      cappuccino about 3.5 per cent dearer. Barista wages, however, rise much faster, by about
+      13.6 per cent, and because the index is price divided by wage, it falls. Richer
+      countries pay more for the cup but pay the person making it more again, which is the
+      productivity story behind Balassa&ndash;Samuelson seen from the other side of the
+      counter.
     </p>
 
     <h3 id="cappuccino-xr" class="coffee__subhead">A new coffee-based measure of exchange-rate valuation</h3>
 
     <p class="prose coffee__body">
-      Because Hoffmann&rsquo;s survey records each price in local currency, the same cups can
-      also be used to value currencies. The Economist has done this with the Big Mac since 1986. Dividing a
+      The second textbook fact concerns exchange rates. If purchasing power parity held, a
+      cappuccino converted into dollars at the market exchange rate would cost the same
+      everywhere. Where it does not, the gap between a country&rsquo;s dollar price and the
+      American price measures how far its currency is from parity. The Economist has done this with the Big Mac since 1986. Dividing a
       country&rsquo;s Big Mac price in local currency by the American price in dollars gives an
       implied exchange rate, and comparing that with the market rate says whether the currency
       is overvalued or undervalued against the dollar. I ran the same computation using the
