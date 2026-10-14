@@ -5,5 +5,5 @@ outletName: "Liberty Street Economics"
 date: 2024-10-10
 url: "https://libertystreeteconomics.newyorkfed.org/2024/10/international-stock-markets-reactions-to-eu-climate-policy-shocks/"
 paper: "global-spillovers-of-climate-policy-shocks"
-topics: []
+topics: ["climate", "international-finance"]
 ---

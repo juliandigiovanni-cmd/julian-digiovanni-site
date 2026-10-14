@@ -5,5 +5,5 @@ outletName: "Liberty Street Economics"
 date: 2021-01-06
 url: "https://libertystreeteconomics.newyorkfed.org/2021/01/the-international-spillover-of-us-monetary-policy-via-global-production-linkages.html"
 paper: "stock-market-spillovers-via-the-global-production-network"
-topics: []
+topics: ["monetary-policy", "supply-chains", "international-finance"]
 ---

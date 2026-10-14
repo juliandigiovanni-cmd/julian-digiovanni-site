@@ -8,8 +8,9 @@ const posts = (await getCollection('writing')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Topics are inherited from the paper each piece explains, so the filter works
-// here with no new data. 24 of 29 entries resolve to a paper.
+// Topics are inherited from the paper each piece explains. A piece's own
+// `topics` replaces the paper's rather than adding to them, which is how pieces
+// with no paper get tagged, and how a piece is given tags its paper lacks.
 const withPaper = await Promise.all(
   posts.map(async (post) => {
     const paper = post.data.paper ? await getEntry(post.data.paper) : undefined;
