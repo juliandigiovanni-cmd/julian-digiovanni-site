@@ -73,6 +73,7 @@ const writing = defineCollection({
     // slug fails the build instead of rendering a dead cross-link.
     paper: reference('papers').optional(),
     topics: z.array(z.string()).default([]),
+    press: z.array(link).default([]),
   }),
 });
 

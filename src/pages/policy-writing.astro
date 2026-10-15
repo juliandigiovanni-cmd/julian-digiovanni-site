@@ -97,6 +97,12 @@ const fmt = (d: Date) => ({
                       <a href={`/research/#${paper.id}`}>Paper: {paper.data.title} →</a>
                     </p>
                   )}
+                  {post.data.press.length > 0 && (
+                    <p class="pub__press">
+                      <span class="pub__press-label">Coverage</span>
+                      {post.data.press.map((l) => <Link href={l.url}>{l.label}</Link>)}
+                    </p>
+                  )}
                 </div>
               </li>
             );
