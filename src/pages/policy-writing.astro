@@ -11,11 +11,16 @@ const posts = (await getCollection('writing')).sort(
 // Topics are inherited from the paper each piece explains. A piece's own
 // `topics` replaces the paper's rather than adding to them, which is how pieces
 // with no paper get tagged, and how a piece is given tags its paper lacks.
+// Coverage works the other way: the paper's press is added after the piece's
+// own, so a piece shows both, with duplicate URLs dropped.
 const withPaper = await Promise.all(
   posts.map(async (post) => {
     const paper = post.data.paper ? await getEntry(post.data.paper) : undefined;
     const topics = post.data.topics.length ? post.data.topics : (paper?.data.topics ?? []);
-    return { post, paper, topics };
+    const press = [...post.data.press, ...(paper?.data.press ?? [])].filter(
+      (l, i, all) => all.findIndex((m) => m.url === l.url) === i,
+    );
+    return { post, paper, topics, press };
   }),
 );
 
@@ -76,7 +81,7 @@ const fmt = (d: Date) => ({
           <span class="section-count" data-count-for={o.key}>{items.length}</span>
         </header>
         <ul class="pub-list">
-          {items.map(({ post, paper, topics: ts }) => {
+          {items.map(({ post, paper, topics: ts, press }) => {
             const d = fmt(post.data.date);
             return (
               <li class="pub" data-topics={ts.join(' ')}>
@@ -97,10 +102,10 @@ const fmt = (d: Date) => ({
                       <a href={`/research/#${paper.id}`}>Paper: {paper.data.title} →</a>
                     </p>
                   )}
-                  {post.data.press.length > 0 && (
+                  {press.length > 0 && (
                     <p class="pub__press">
                       <span class="pub__press-label">Coverage</span>
-                      {post.data.press.map((l) => <Link href={l.url}>{l.label}</Link>)}
+                      {press.map((l) => <Link href={l.url}>{l.label}</Link>)}
                     </p>
                   )}
                 </div>

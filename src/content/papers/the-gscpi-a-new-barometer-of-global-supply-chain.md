@@ -15,4 +15,5 @@ abstract: "We propose a novel indicator to capture pressures that arise at the g
 featured: false
 series: [{"label": "FRBNY Staff Report No. 1017", "url": "https://www.newyorkfed.org/research/staff_reports/sr1017"}]
 version: "May22"
+press: [{"label": "CNBC", "url": "https://www.cnbc.com/2022/01/04/supply-chain-pressures-driving-inflation-may-have-peaked-ny-fed-index-suggests.html"}, {"label": "Bloomberg Supply Chain Latest", "url": "https://www.bloomberg.com/news/newsletters/2022-01-05/supply-chain-latest-new-global-supply-chain-gauge-shows-pressure-has-peaked"}, {"label": "Business Insider", "url": "https://www.businessinsider.com/global-supply-chain-crisis-may-have-peaked-ny-fed-2022-1"}]
 ---
