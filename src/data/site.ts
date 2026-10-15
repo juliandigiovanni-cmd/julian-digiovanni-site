@@ -25,6 +25,7 @@ export const site = {
   profiles: [
     { label: 'Google Scholar', url: 'https://scholar.google.com/citations?user=paYBFFcAAAAJ&hl=en' },
     { label: 'IDEAS/RePEc', url: 'https://ideas.repec.org/e/pdi67.html' },
+    { label: 'SSRN', url: 'https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=104700' },
     { label: 'New York Fed', url: 'https://www.newyorkfed.org/research/economists/digiovanni' },
   ],
 
